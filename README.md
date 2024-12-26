@@ -157,6 +157,15 @@ Si está conectado por USB está recibiendo carga. Se da por supuesto que nuestr
 ### Funcionamiento por batería
 Si no recibe carga por USB, el voltaje de la batería es calculado. Este se envía a Traccar y además un ignition=false. Sabremos por tanto el nivel de carga restante de nuestro ESP32, ubicación y batería de la moto. Se envían el tiempo definido por la variable `VEHIApagadoDelay`
 
+# ¿Cómo compilarlo?
+Descarga la carpeta SRC completa y abre CanRiderONE.ino con Arduino. Descarga la librería ´Adafruit_ST7735´ y ´Adafruit_GFX´. Realmente no son necesarias, pero en la versión que tengo uso una pequeña pantalla TFT para poder ver los logs. 
+
+Adapta las variables recogidas en ´globals.cpp´ y compila. 
+
+Estoy seguro que se puede usar con otros módems, por lo que en ´globals.cpp´puedes modificar los pines de marcado del módem para poder usarlo.
+
+Compila. 
+
 ## Licencia
 Este proyecto está bajo la licencia [MIT](LICENSE).
 
