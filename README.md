@@ -18,18 +18,18 @@ Ideal para entusiastas de la tecnología y la movilidad eléctrica, **CANRider O
 ![Captura de Traccar](https://github.com/jichef/CANRider-One/blob/main/capture_traccar.png)
 
 ## Motivación
-Es conocido que con la actualizacion por parte se VMOTO de sus ECUs ha dejado sin servicio a muchos usuarios, obligando a adquirir una nueva ECU (y todos sabemos que no es barata). Su app, además, puede pasar mucho tiempo sin conexión. 
+EEs bien sabido que la actualización reciente por parte de VMOTO de sus ECUs ha dejado sin servicio a muchos usuarios, obligándolos a adquirir una nueva ECU (y todos sabemos lo costosas que son). Además, su app puede pasar largos períodos sin conexión.
 
-En mi caso, es muy importante conocer el porcentaje de la batería en cada momento, cosa que no siempre me acuerdo de comprobar. Gracias al desarrollo de [SusoDevs](https://github.com/Xmanu12/SuSoDevs/) descubrí que esto era posible gracias a la lectura del CANBus a traves de un ESP32.
+En mi caso, es crucial conocer el porcentaje de la batería en todo momento, algo que no siempre recuerdo comprobar. Gracias al trabajo de [SusoDevs](https://github.com/Xmanu12/SuSoDevs/) descubrí que esto es posible a través de la lectura del CANBus con un ESP32.
 
-Este software está desarrollado utilizando una placa [LilyGo TSIM7000G 16MB (Aliexpress)](https://es.aliexpress.com/item/4000542688096.html?spm=a2g0o.productlist.main.3.32cbJudJJudJ2w&algo_pvid=415d3a53-2736-4e1c-81be-6b7a21f6e6fb&algo_exp_id=415d3a53-2736-4e1c-81be-6b7a21f6e6fb-1&pdp_npi=4%40dis%21EUR%2141.59%2141.59%21%21%2142.24%2142.24%21%4021038e6617352498647415124efd6a%2112000032432563392%21sea%21ES%210%21ABX&curPageLogUid=8nMRXncF299e&utparam-url=scene%3Asearch%7Cquery_from%3A) . Basado en ESP32 y diseñado para aplicaciones de IoT. Está equipado con un módulo SIM7000G, que soporta comunicaciones GSM, GPRS, GNSS (GPS, GLONASS) y LTE CAT-M/NB-IoT, lo que permite conectividad móvil para transmisión de datos y ubicación. Por tanto, cuenta con soporte para tarjetas SIM.  Incluye ranura para tarjeta microSD y antenas para mejorar la recepción. Evidentemente, con Wifi y Bluetooth.
+CANRider One está basado en una placa [LilyGo TSIM7000G 16MB (Aliexpress)](https://es.aliexpress.com/item/4000542688096.html?spm=a2g0o.productlist.main.3.32cbJudJJudJ2w&algo_pvid=415d3a53-2736-4e1c-81be-6b7a21f6e6fb&algo_exp_id=415d3a53-2736-4e1c-81be-6b7a21f6e6fb-1&pdp_npi=4%40dis%21EUR%2141.59%2141.59%21%21%2142.24%2142.24%21%4021038e6617352498647415124efd6a%2112000032432563392%21sea%21ES%210%21ABX&curPageLogUid=8nMRXncF299e&utparam-url=scene%3Asearch%7Cquery_from%3A). Se trata de un dispositivo basado en ESP32, diseñado para aplicaciones IoT, que incluye un módulo SIM7000G compatible con GSM, GPRS, GNSS (GPS, GLONASS), y LTE CAT-M/NB-IoT. Esto permite la conectividad móvil para la transmisión de datos y ubicación. Además, tiene soporte para tarjetas SIM, ranura para microSD y antenas para mejorar la recepción. Y, por supuesto, cuenta con WiFi y Bluetooth.
 
 ![LilyGo TSIM7000G](https://i0.wp.com/randomnerdtutorials.com/wp-content/uploads/2022/08/ESP32-TSIM7000G.jpg?resize=750%2C422&quality=100&strip=all&ssl=1$0)
 
 La integración con Traccar viene definida (con algunos retoques) gracias al codigo de [github.com/onlinegill](https://github.com/onlinegill/LILYGO-TTGO-T-SIM7000G-ESP32-Traccar-GPS-tracker) y [github.com/markoAntonio1962](https://github.com/markoAntonio1692/TTGO-SIM7000G-TRACCAR).
 
 ## Estructura de Archivos: CANRider One
-Hasta llegar a esta versión el código ha evolucionado. Lo he convertido en un programa modular, cada uno con propósitos diferentes, donde he dejado establecidas cuales son las variables para que se pueda adaptar el código a las necesadidades de cada uno.
+A lo largo del proceso, el código ha pasado por varias etapas de evolución. He logrado transformarlo en un programa modular, donde cada módulo cumple con un propósito específico. Además, he definido claramente las variables, lo que permite adaptar fácilmente el código a las necesidades particulares de cada usuario.
 
 A continuación, se detalla la descripción de cada archivo:
 
@@ -78,18 +78,16 @@ El archivo contiene las configuraciones principales para el dispositivo, como no
 - **Tiempos de Actualización**: Ajustar `VEHIEncendidoDelay` y `VEHIApagadoDelay` según las necesidades de actualización del GPS.
 - **Comandos SMS**: Las palabras clave (`SMS_KEYWORD_SECURITY`, `SMS_KEYWORD_GPS`, `SMS_KEYWORD_REBOOT`) pueden ser personalizadas para evitar colisiones o facilitar su uso.
 
-Si necesitas más información o detalles sobre cómo ajustar alguna de estas variables, ¡puedes indicármelo! 😊
-
-
 # Servidor de datos
-Para obtener los servicios de localización no hace falta Tracar, pues podemos pedir por SMS y nos devolverá la ubicación en formato Google maps.
-Para poder recibir los datos en local se necesita tener Traccar instalado. En mi instalación lo tengo ejecutándose en un LXC detrás de un servidor de Proxmox protegido por un proxy inverso. Te indico cómo configurarlo:
+Para obtener los servicios de localización, no es necesario Traccar. Podemos solicitar la ubicación por SMS, y esta nos será devuelta en formato Google Maps.
+
+Sin embargo, para recibir los datos de forma local, es necesario tener Traccar instalado. En mi configuración, tengo Traccar ejecutándose en un contenedor LXC detrás de un servidor Proxmox, protegido por un proxy inverso. A continuación, te explico cómo configurarlo:
 
 ## Traccar
 
-Mi instalación de Traccar corre en un contenedor de Proxmox. Pero puedes instalarlo en cualquier parte según la documentación de Traccar.
+Mi instalación de Traccar se ejecuta en un contenedor de Proxmox, pero puedes instalarlo en cualquier otro entorno siguiendo la documentación oficial de Traccar.
 
-Igualmente, aquí te dejo los pasos para instalarlo en Proxmox:
+De todos modos, aquí te dejo los pasos para instalarlo en Proxmox:
 
 [Proxmos Helper Scripts: Traccar en Proxmox](https://community-scripts.github.io/ProxmoxVE/scripts?id=traccar)
 
@@ -101,15 +99,17 @@ bash -c "$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/c
 
 ## Proxy inverso
 
-Te recomiendo utilizar un proxy inverso para el cifrado https. Utilizo NGINX Proxy Manager. Hay muchas opciones de instalación, pero en mi caso lo tengo corriendo en un contenedor de Proxmox.
+Te recomiendo utilizar un proxy inverso para habilitar el cifrado HTTPS. En mi caso, utilizo NGINX Proxy Manager, aunque existen varias opciones de instalación. Yo lo tengo ejecutándose en un contenedor de Proxmox.
+
+Si te interesa, puedes seguir los pasos para instalarlo con este script.
 
 [Proxmos Helper Scripts: NGINX Proxy Manager](https://community-scripts.github.io/ProxmoxVE/scripts?id=nginxproxymanager)
 ```bash
 bash -c "$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/ct/nginxproxymanager.sh)"
 ```
-(Las credenciales de inicio de sesión son admin@example.com y pass: changeme; te pedirá cambiarlas con el primer inicio)
+(Las credenciales predeterminadas son user ´admin@example.com´ y pass ´changeme´; el sistema te pedirá que las cambies al primer inicio).
 
-1. Bueno, imaginando que tienes NGINX Proxy Manager configurado y corriendo, lo primero que tenemos que hacer es darnos de alta en DuckDNS, y habilitar un nuevo subdominio (mi consejo es utilizar un nombre largo y aleatorio de letras y numeros, creo que se admiten hasta 30). Anota el token
+1. Asumiendo que ya tienes NGINX Proxy Manager configurado y en funcionamiento, lo siguiente es registrarte en DuckDNS y habilitar un nuevo subdominio (mi recomendación es usar un nombre largo y aleatorio de letras y números, ya que se admiten hasta 30 caracteres). No olvides guardar el token.
 
 
 | Variable  | Explicación |
@@ -122,21 +122,20 @@ bash -c "$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/c
 | Websocket Support  | Marcado |
 | Access List  | Public |
 
-2. Pasamos a la pestaña SSL. En este momento vamos a generar un certificado para nuestro subdominio. Elegimos la opción Request a new certificate y marcamos "Use a DNS Challenge". En DNS Provider, busca DuckDNS y se descubrirá un apartado que se llama "Credentials File Content". En el cuadro de texto sustituye "your-duckdns-token" por el token que copiaste en el paso 1. desde la web DuckDNS.
+2. Ahora vamos a la pestaña SSL para generar un certificado para nuestro subdominio. Selecciona la opción "Request a new certificate" y marca "Use a DNS Challenge". En el campo DNS Provider, elige DuckDNS. Aparecerá un apartado llamado "Credentials File Content". En el cuadro de texto, reemplaza "your-duckdns-token" con el token que copiaste en el paso 1 desde la web de DuckDNS.
+3. A continuación, agrega un nuevo host. En el campo de nombre del host, escribe el subdominio que creaste, es decir, subdominio.duckdns.org.
+4. Por último, ingresa el correo con el que te has registrado en Let's Encrypt (si aún no te has registrado, hazlo). Acepta los términos y haz clic en Guardar.
 
-2. Agrega un nuevo host. En el nombre del host escribe el nombre del subdominio.duckdns.org. 
-3. Por ultimo, escribe el correo por el que estás registrado en Let's Encrypt (si no te has registrado, hazlo). Acepta los términos y dale a guardar. 
+IMPORTANTE: En la versión de Proxy Manager que estoy utilizando, encontré un error con el certbot para DuckDNS. Tuve que acceder a la máquina de NGINX a través de SSH y ejecutar el siguiente comando: `pip install certbot-dns-duckdns`
 
-OJO. En la versión en la que me encuentro de Proxy Manager da error en el certbot para duckdns. He tenido que hacer SSH a la maquina de NGINX y ejecutar `pip install certbot-dns-duckdns`
-
-4. No podemos habilitar dentro ninguna casilla ninguna casilla como Force SSL, porque Traccar solo acepta conexiones http (no he conseguido configurarlo para que acepte https). Dicho esto, podemos decir que nuestro acceso está protegido hasta llegar a nuestro router, pero cuando entramos en nuestra red local, ya viaja por http. Supongo que tu red local la consideras un espacio "seguro". 
-
-Teniendo esto configurado podemos decir que nuestro acceso.
+5. No podemos habilitar ninguna casilla como Force SSL, ya que Traccar solo acepta conexiones HTTP (hasta ahora no he logrado configurarlo para que acepte HTTPS). Dicho esto, podemos asegurar que el acceso está protegido hasta llegar a nuestro router, pero una vez dentro de la red local, la conexión ya se realiza por HTTP. Supongo que tu red local la consideras un espacio "seguro".
+6. 
+Con esta configuración, podemos afirmar que nuestro acceso está protegido mientras atraviesa la red externa, pero en el interior de nuestra red local, la comunicación sigue siendo HTTP.
 
 ## Comandos de rescate
-He decido agregar un plan B de rescate en el caso de que todo falle. Dado que el modem puede recibir, leer y enviar sms (qué viejo suena eso) puede ser una vía de comunicación alternativa con el modulo. El mensaje no importa cómo se envíe: mayúsculas, minúsculas, combinación... el texto recibido se convierte a minúsculas.
+He decidido agregar un plan B de rescate en caso de que todo falle. Dado que el módem puede recibir, leer y enviar SMS (¡qué tan retro suena eso!), se puede utilizar como una vía de comunicación alternativa con el módulo. No importa cómo se envíe el mensaje: mayúsculas, minúsculas o una combinación de ambas; el texto recibido se convertirá automáticamente a minúsculas.
 
-Los SMS entre números de teléfono DIGI son gratuitos, por tanto, no me preocupa el costo.
+Además, como los SMS entre números de teléfono DIGI son gratuitos, no tengo que preocuparme por los costos.
 
 
 | Keyword  | Explicación |
@@ -148,9 +147,9 @@ Los SMS entre números de teléfono DIGI son gratuitos, por tanto, no me preocup
 Los mensajes se consultan según los tiempos marcados en las variables `VEHIEncendidoDelay` o `VEHIapagadoDelay` para ahorrar batería. Una vez leídos son borrados.
 
 # ¿Cómo funciona?
-El ESP32 lleva una batería incorporada 18650, lo que le da una autonomía de unas 6 horas aproximadamente. Mientras que nuestra placa esté conectada por USB, la batería se carga; si deja de recibir carga por USB, se reinicia activándose el uso de la batería. 
+El ESP32 cuenta con una batería opcional 18650, lo que le proporciona una autonomía de aproximadamente 6 horas. Mientras la placa esté conectada por USB, la batería se cargará; en caso de que deje de recibir carga por USB, se reiniciará y se activará el uso de la batería.
 
-Encontramos dos diferenciados flujos de trabajo. 
+De esta manera, encontramos dos flujos de trabajo diferenciados:
 
 ### Funcionamiento por USB 
 Si está conectado por USB está recibiendo carga. Se da por supuesto que nuestro vehículo está arrancado y funcionando. El programa no es capaz de medir el voltaje de la bateria incorporada en nuestro ESP32 y da un valor de 0 y, como consecuencia, se envía a Traccar ignition=true. En el momento que se adquieren coordenadas gps a nuestro servidor según el tiempo definido por la variable `VEHIEncendidoDelay`. En Traccar se verá la ubicación del vehículo y el nivel de batería de la moto. 
@@ -168,12 +167,12 @@ Estoy seguro que se puede usar con otros módems, por lo que en ´globals.cpp´p
 Compila. 
 
 ## Conexiones
-Además, evidentemente necesitas conectar todo... necesitas un transciever SN65HVD230 al que debes eliminarle una de sus resistencias. Se utilizan los pines del ESP32 32 para TX y 33 para RX del transciever. El CANL y H del mismo deberan conectarse a la moto. Afinaré próximamente con fotografias.
+Además, evidentemente necesitas conectar todo... necesitas un [transciever SN65HVD230](https://es.aliexpress.com/item/1005005334841319.html?spm=a2g0o.productlist.main.3.562bwUEbwUEbnJ&algo_pvid=c0fde24f-6404-4207-8548-a5346b5d350f&algo_exp_id=c0fde24f-6404-4207-8548-a5346b5d350f-1&pdp_npi=4%40dis%21EUR%211.40%210.99%21%21%211.42%211.00%21%40210385bb17352526104448446eabf4%2112000032650245761%21sea%21ES%210%21ABX&curPageLogUid=BfAzKAmOFKat&utparam-url=scene%3Asearch%7Cquery_from%3A) al que debes eliminarle una de sus resistencias (da igual). Se utilizan los pines del ESP32 32 para TX y 33 para RX del transciever. Están elegidos esos para que queden juntos 3.3V, GND, 32 y 33. Directos al transciever. El CANL y H del mismo deberan conectarse a la moto. 
 
 ![Trasnceiver-tsim](https://github.com/jichef/CANRider-One/blob/main/images/transciever-tsim.jpg)
 
 
-¡Ah! Me olvidaba. En thingiverse.com tienes la carcasa para imprimirla en 3D.
+¡Ah! Me olvidaba. En thingiverse.com tienes la carcasa perfecta para imprimirla en 3D.
 
 [Carcasa impresa](https://www.thingiverse.com/thing:5861376)
 
