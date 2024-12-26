@@ -111,7 +111,7 @@ bash -c "$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/c
 
 | Variable  | Explicación |
 | ------------- | ------------- |
-| Domain names  | escribe el nombre del subdominio.duckdns.org. |
+| Domain names  | Escribe el nombre del subdominio.duckdns.org. |
 | Schema  | Elige http |
 | Hostname  | La dirección IP donde tienes Traccar funcionando |
 | Port  | El puerto donde está funcionando (aquí deberías usar 5055) |
@@ -138,9 +138,9 @@ Los SMS entre números de teléfono DIGI son gratuitos, por tanto, no me preocup
 
 | Keyword  | Explicación |
 | ------------- | ------------- |
-| reboot  | Se recibe el mensaje y se envía una respuesta al remitente `El comando 'reboot' se ha recibido... reiniciando`. En ese momento el ESP32 se reinicia. |
-| gps  | Se recibe el mensaje y se envía la última localización GPS en formato google maps: `Aqui esta tu localizacion: https://www.google.com/maps?q=LAT,LONG` |
-| vaciar  | Elimina todos los sms del ESP. |
+| `reboot`  | Se recibe el mensaje y se envía una respuesta al remitente `El comando 'reboot' se ha recibido... reiniciando`. En ese momento el ESP32 se reinicia. |
+| `gps`  | Se recibe el mensaje y se envía la última localización GPS en formato google maps: `Aqui esta tu localizacion: https://www.google.com/maps?q=LAT,LONG` |
+| `vaciar`  | Elimina todos los sms del ESP. |
 
 Los mensajes se consultan según los tiempos marcados en las variables `VEHIEncendidoDelay` o `VEHIapagadoDelay` para ahorrar batería. Una vez leídos son borrados.
 
