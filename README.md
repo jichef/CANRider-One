@@ -13,6 +13,8 @@ Ideal para entusiastas de la tecnología y la movilidad eléctrica, **CANRider O
 - 📊 **Monitoreo en tiempo real**: Mantente informado sobre los datos clave de tu motocicleta.
 - ⚡ **Conectividad CAN**: Utiliza el protocolo estándar para vehículos eléctricos.
 - 🚀 **Fácil de usar**: Interfaz sencilla y enfoque en la funcionalidad.
+  
+![Captura de Traccar](https://github.com/jichef/CANRider-One/blob/main/capture_traccar.png)
 
 ## Motivación
 Es conocido que con la actualizacion por parte se VMOTO de sus ECUs ha dejado sin servicio a muchos usuarios, obligando a adquirir una nueva ECU (y todos sabemos que no es barata). Su app, además, puede pasar mucho tiempo sin conexión. 
