@@ -184,7 +184,7 @@ Además, evidentemente necesitas conectar todo. Necesitas un [transciever SN65HV
 [Carcasa impresa](https://www.thingiverse.com/thing:5861376)
 
 ## Velocidad del bus
-La velocidad del bus de Supersoco es 250kbps, pero si deseas usar este proyecto y no sabes la velocidad del bus de ti vehiculo, te dejo un [.ino](ReceptorTWAI_speed/Receptor_TWAI_multiplespeed.ino) que escucha a diferentes velocidades. Empieza en 125kbps y cada 5 segundos va subiendo y va informando de lo que escucha.
+La velocidad del bus de Supersoco CPX es 250kbps, pero si deseas usar este proyecto y no sabes la velocidad del bus de tu vehículo, te dejo un [.ino](ReceptorTWAI_speed/Receptor_TWAI_multiplespeed.ino) que escucha a diferentes velocidades. Empieza en 125kbps y cada 5 segundos aumenta la velocidad hasta 1000Kbps mientras informa de lo que recibe. Después puedes usar este otro [receptor TWAI](ReceptorTWAI_speed/Receptor_TWAI.ino) con la velocidad que elijas para escuchar todo lo que se cuece por tu circuito CAN.
 
 ## Licencia
 Este proyecto está bajo la licencia [MIT](LICENSE).
