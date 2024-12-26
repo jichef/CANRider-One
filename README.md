@@ -22,7 +22,7 @@ Es conocido que con la actualizacion por parte se VMOTO de sus ECUs ha dejado si
 
 En mi caso, es muy importante conocer el porcentaje de la batería en cada momento, cosa que no siempre me acuerdo de comprobar. Gracias al desarrollo de [SusoDevs](https://github.com/Xmanu12/SuSoDevs/) descubrí que esto era posible gracias a la lectura del CANBus a traves de un ESP32.
 
-Este software está desarrollado utilizando una placa LilyGo TSIM7000G. Basado en ESP32 y diseñado para aplicaciones de IoT. Está equipado con un módulo SIM7000G, que soporta comunicaciones GSM, GPRS, GNSS (GPS, GLONASS) y LTE CAT-M/NB-IoT, lo que permite conectividad móvil para transmisión de datos y ubicación. Por tanto, cuenta con soporte para tarjetas SIM.  Incluye ranura para tarjeta microSD y antenas para mejorar la recepción. Evidentemente, con Wifi y Bluetooth.
+Este software está desarrollado utilizando una placa [LilyGo TSIM7000G 16MB (Aliexpress)](https://es.aliexpress.com/item/4000542688096.html?spm=a2g0o.productlist.main.3.32cbJudJJudJ2w&algo_pvid=415d3a53-2736-4e1c-81be-6b7a21f6e6fb&algo_exp_id=415d3a53-2736-4e1c-81be-6b7a21f6e6fb-1&pdp_npi=4%40dis%21EUR%2141.59%2141.59%21%21%2142.24%2142.24%21%4021038e6617352498647415124efd6a%2112000032432563392%21sea%21ES%210%21ABX&curPageLogUid=8nMRXncF299e&utparam-url=scene%3Asearch%7Cquery_from%3A) . Basado en ESP32 y diseñado para aplicaciones de IoT. Está equipado con un módulo SIM7000G, que soporta comunicaciones GSM, GPRS, GNSS (GPS, GLONASS) y LTE CAT-M/NB-IoT, lo que permite conectividad móvil para transmisión de datos y ubicación. Por tanto, cuenta con soporte para tarjetas SIM.  Incluye ranura para tarjeta microSD y antenas para mejorar la recepción. Evidentemente, con Wifi y Bluetooth.
 
 ![LilyGo TSIM7000G](https://i0.wp.com/randomnerdtutorials.com/wp-content/uploads/2022/08/ESP32-TSIM7000G.jpg?resize=750%2C422&quality=100&strip=all&ssl=1$0)
 
@@ -169,6 +169,9 @@ Compila.
 
 ## Conexiones
 Además, evidentemente necesitas conectar todo... necesitas un transciever SN65HVD230 al que debes eliminarle una de sus resistencias. Se utilizan los pines del ESP32 32 para TX y 33 para RX del transciever. El CANL y H del mismo deberan conectarse a la moto. Afinaré próximamente con fotografias.
+
+![Trasnceiver-tsim](https://github.com/jichef/CANRider-One/blob/main/images/transciever-tsim.jpg)
+
 
 ¡Ah! Me olvidaba. En thingiverse.com tienes la carcasa para imprimirla en 3D.
 
