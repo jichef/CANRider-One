@@ -166,6 +166,11 @@ Estoy seguro que se puede usar con otros módems, por lo que en ´globals.cpp´p
 
 Compila. 
 
+¡Ah! Me olvidaba. En thingiverse.com tienes la carcasa para imprimirla en 3D.
+
+[Carcasa impresa](https://www.thingiverse.com/thing:5861376)
+
+
 ## Licencia
 Este proyecto está bajo la licencia [MIT](LICENSE).
 
