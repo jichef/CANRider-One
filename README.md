@@ -13,7 +13,8 @@ Ideal para entusiastas de la tecnología y la movilidad eléctrica, **CANRider O
 - 📊 **Monitoreo en tiempo real**: Mantente informado sobre los datos clave de tu motocicleta.
 - ⚡ **Conectividad CAN**: Utiliza el protocolo estándar para vehículos eléctricos.
 - 🚀 **Fácil de usar**: Interfaz sencilla y enfoque en la funcionalidad.
-  
+- 🤖 **HomeAssistant**: Integrable en HomeAssistant gracias a la integración propia de Traccar
+
 ![Captura de Traccar](https://github.com/jichef/CANRider-One/blob/main/capture_traccar.png)
 
 ## Motivación
