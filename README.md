@@ -152,6 +152,8 @@ Además, como los SMS entre números de teléfono DIGI son gratuitos, no tengo q
 
 Los mensajes se consultan según los tiempos marcados en las variables `VEHIEncendidoDelay` o `VEHIapagadoDelay` para ahorrar batería. Una vez leídos son borrados.
 
+Además, solo responden a un número de teléfono defindo en una variable del código (en globals.cpp ´phoneNumber´). Sí un número desconocido pide localización GPS el ESP no responderá a no ser que incluya una palabra secreta definida también en otra variable del código (´SMS_KEYWORD_SECURITY´].
+
 # ¿Cómo funciona?
 El ESP32 cuenta con una batería opcional 18650, lo que le proporciona una autonomía de aproximadamente 6 horas. Mientras la placa esté conectada por USB, la batería se cargará; en caso de que deje de recibir carga por USB, se reiniciará y se activará el uso de la batería.
 
@@ -164,7 +166,7 @@ Si está conectado por USB está recibiendo carga. Se da por supuesto que nuestr
 Si no recibe carga por USB, el voltaje de la batería es calculado. Este se envía a Traccar y además un ignition=false. Sabremos por tanto el nivel de carga restante de nuestro ESP32, ubicación y batería de la moto. Se envían el tiempo definido por la variable `VEHIApagadoDelay`
 
 # ¿Cómo compilarlo?
-Descarga la carpeta SRC completa y abre CanRiderONE.ino con Arduino. Descarga la librería ´Adafruit_ST7735´ y ´Adafruit_GFX´. Realmente no son necesarias, pero en la versión que tengo uso una pequeña pantalla TFT para poder ver los logs. 
+Descarga la carpeta SRC completa y abre CanRiderONE.ino con Arduino. Descarga la librería ´Adafruit_ST7735´ y ´Adafruit_GFX´. Realmente no son necesarias, pero en la versión que tengo uso una pequeña pantalla TFT para poder ver los logs. Puedes eliminar las referencias del código si quieres.
 
 Adapta las variables recogidas en ´globals.cpp´ y compila. 
 
@@ -173,12 +175,11 @@ Estoy seguro que se puede usar con otros módems, por lo que en ´globals.cpp´p
 Compila. 
 
 ## Conexiones
-Además, evidentemente necesitas conectar todo... necesitas un [transciever SN65HVD230](https://es.aliexpress.com/item/1005005334841319.html?spm=a2g0o.productlist.main.3.562bwUEbwUEbnJ&algo_pvid=c0fde24f-6404-4207-8548-a5346b5d350f&algo_exp_id=c0fde24f-6404-4207-8548-a5346b5d350f-1&pdp_npi=4%40dis%21EUR%211.40%210.99%21%21%211.42%211.00%21%40210385bb17352526104448446eabf4%2112000032650245761%21sea%21ES%210%21ABX&curPageLogUid=BfAzKAmOFKat&utparam-url=scene%3Asearch%7Cquery_from%3A) al que debes eliminarle una de sus resistencias (da igual). Se utilizan los pines del ESP32 32 para TX y 33 para RX del transciever. Están elegidos esos para que queden juntos 3.3V, GND, 32 y 33. Directos al transciever. El CANL y H del mismo deberan conectarse a la moto. 
+Además, evidentemente necesitas conectar todo. Necesitas un [transciever SN65HVD230](https://es.aliexpress.com/item/1005005334841319.html?spm=a2g0o.productlist.main.3.562bwUEbwUEbnJ&algo_pvid=c0fde24f-6404-4207-8548-a5346b5d350f&algo_exp_id=c0fde24f-6404-4207-8548-a5346b5d350f-1&pdp_npi=4%40dis%21EUR%211.40%210.99%21%21%211.42%211.00%21%40210385bb17352526104448446eabf4%2112000032650245761%21sea%21ES%210%21ABX&curPageLogUid=BfAzKAmOFKat&utparam-url=scene%3Asearch%7Cquery_from%3A) al que debes eliminarle una de sus resistencias (da igual si es R1 o R2). Se utilizan los pines del ESP32 32 para TX y 33 para RX del transciever. Están elegidos esos para que queden juntos 3.3V, GND, 32 y 33. Directos al transciever. El CANL y H del mismo deberan conectarse a la moto. 
 
 ![Trasnceiver-tsim](https://github.com/jichef/CANRider-One/blob/main/images/transciever-tsim.jpg)
 
-
-¡Ah! Me olvidaba. En thingiverse.com tienes la carcasa perfecta para imprimirla en 3D.
+¡Ah! Me olvidaba. En thingiverse.com tienes la carcasa muy chula para imprimirla en 3D.
 
 [Carcasa impresa](https://www.thingiverse.com/thing:5861376)
 
