@@ -18,18 +18,20 @@ Ideal para entusiastas de la tecnología y la movilidad eléctrica, **CANRider O
 ![Captura de Traccar](https://github.com/jichef/CANRider-One/blob/main/capture_traccar.png)
 
 ## Motivación
-EEs bien sabido que la actualización reciente por parte de VMOTO de sus ECUs ha dejado sin servicio a muchos usuarios, obligándolos a adquirir una nueva ECU (y todos sabemos lo costosas que son). Además, su app puede pasar largos períodos sin conexión.
+Es bien sabido que la actualización reciente por parte de VMOTO de sus ECUs ha dejado sin servicio a muchos usuarios, obligándolos a adquirir una nueva ECU (y todos sabemos lo costosas que son). Además, su app puede pasar largos períodos sin conexión.
 
 En mi caso, es crucial conocer el porcentaje de la batería en todo momento, algo que no siempre recuerdo comprobar. Gracias al trabajo de [SusoDevs](https://github.com/Xmanu12/SuSoDevs/) descubrí que esto es posible a través de la lectura del CANBus con un ESP32.
 
-CANRider One está basado en una placa [LilyGo TSIM7000G 16MB (Aliexpress)](https://es.aliexpress.com/item/4000542688096.html?spm=a2g0o.productlist.main.3.32cbJudJJudJ2w&algo_pvid=415d3a53-2736-4e1c-81be-6b7a21f6e6fb&algo_exp_id=415d3a53-2736-4e1c-81be-6b7a21f6e6fb-1&pdp_npi=4%40dis%21EUR%2141.59%2141.59%21%21%2142.24%2142.24%21%4021038e6617352498647415124efd6a%2112000032432563392%21sea%21ES%210%21ABX&curPageLogUid=8nMRXncF299e&utparam-url=scene%3Asearch%7Cquery_from%3A). Se trata de un dispositivo basado en ESP32, diseñado para aplicaciones IoT, que incluye un módulo SIM7000G compatible con GSM, GPRS, GNSS (GPS, GLONASS), y LTE CAT-M/NB-IoT. Esto permite la conectividad móvil para la transmisión de datos y ubicación. Además, tiene soporte para tarjetas SIM, ranura para microSD y antenas para mejorar la recepción. Y, por supuesto, cuenta con WiFi y Bluetooth.
+CANRider One está basado en una placa [LilyGo TSIM7000G 16MB (Aliexpress)](https://es.aliexpress.com/item/4000542688096.html?spm=a2g0o.productlist.main.3.32cbJudJJudJ2w&algo_pvid=415d3a53-2736-4e1c-81be-6b7a21f6e6fb&algo_exp_id=415d3a53-2736-4e1c-81be-6b7a21f6e6fb-1&pdp_npi=4%40dis%21EUR%2141.59%2141.59%21%21%2142.24%2142.24%21%4021038e6617352498647415124efd6a%2112000032432563392%21sea%21ES%210%21ABX&curPageLogUid=8nMRXncF299e&utparam-url=scene%3Asearch%7Cquery_from%3A). Se trata de un dispositivo basado en ESP32, diseñado para aplicaciones IoT, que incluye un módulo SIM7000G compatible con GSM, GPRS, GNSS (GPS, GLONASS), y LTE CAT-M/NB-IoT. Esto permite la conectividad móvil para la transmisión de datos y ubicación. Además, del soporte para tarjetas SIM, dispone de ranura para microSD y antenas para mejorar la recepción. Y, por supuesto, cuenta con WiFi y Bluetooth.
 
 ![LilyGo TSIM7000G](https://i0.wp.com/randomnerdtutorials.com/wp-content/uploads/2022/08/ESP32-TSIM7000G.jpg?resize=750%2C422&quality=100&strip=all&ssl=1$0)
 
 La integración con Traccar viene definida (con algunos retoques) gracias al codigo de [github.com/onlinegill](https://github.com/onlinegill/LILYGO-TTGO-T-SIM7000G-ESP32-Traccar-GPS-tracker) y [github.com/markoAntonio1962](https://github.com/markoAntonio1692/TTGO-SIM7000G-TRACCAR).
 
 ## Estructura de Archivos: CANRider One
-A lo largo del proceso, el código ha pasado por varias etapas de evolución. He logrado transformarlo en un programa modular, donde cada módulo cumple con un propósito específico. Además, he definido claramente las variables, lo que permite adaptar fácilmente el código a las necesidades particulares de cada usuario.
+A lo largo del proceso, el código ha pasado por varias etapas de evolución. He logrado transformarlo en un programa modular, donde cada módulo cumple con un propósito específico, haciéndolo más sencillo para mejorar las diferentes partes del proyecto. 
+
+Además, he definido claramente las variables, lo que permite adaptar fácilmente el código a las necesidades particulares de cada usuario.
 
 A continuación, se detalla la descripción de cada archivo:
 
@@ -50,7 +52,7 @@ A continuación, se detalla la descripción de cada archivo:
 
 # Configuración de Variables Globales
 
-El archivo contiene las configuraciones principales para el dispositivo, como nombre Bluetooth, credenciales GSM, información del servidor Traccar, tiempos de actualización y palabras clave para comandos SMS. A continuación, se describe cada variable:
+El archivo ´globals.cpp´ contiene las configuraciones principales para el dispositivo, como nombre Bluetooth (que se mantiene por tener un log, terminará por desaparecer para ahorrar batería), credenciales GSM, información del servidor Traccar, tiempos de actualización y palabras clave para comandos SMS. A continuación, se describe cada variable:
 
 | **Variable**                  | **Alterable** | **Descripción**                                                                                          |
 |-------------------------------|---------------|----------------------------------------------------------------------------------------------------------|
@@ -78,10 +80,12 @@ El archivo contiene las configuraciones principales para el dispositivo, como no
 - **Tiempos de Actualización**: Ajustar `VEHIEncendidoDelay` y `VEHIApagadoDelay` según las necesidades de actualización del GPS.
 - **Comandos SMS**: Las palabras clave (`SMS_KEYWORD_SECURITY`, `SMS_KEYWORD_GPS`, `SMS_KEYWORD_REBOOT`) pueden ser personalizadas para evitar colisiones o facilitar su uso.
 
-# Servidor de datos
-Para obtener los servicios de localización, no es necesario Traccar. Podemos solicitar la ubicación por SMS, y esta nos será devuelta en formato Google Maps.
+La tarjeta SIM que tengo (DIGI) tiene SMS ilimitados entre números DIGI, por lo que me ha parecido mantener este servicio como un plan B en el caso de no tener conexión de datos y no preocuparme por el sobrecosto de los SMS.
 
-Sin embargo, para recibir los datos de forma local, es necesario tener Traccar instalado. En mi configuración, tengo Traccar ejecutándose en un contenedor LXC detrás de un servidor Proxmox, protegido por un proxy inverso. A continuación, te explico cómo configurarlo:
+# Servidor de datos
+Para obtener y consultar los servicios de localización, no es necesario Traccar. Podemos solicitar la ubicación por SMS, y esta nos será devuelta en formato Google Maps. 
+
+Sin embargo, para recibir los datos de forma local y llevar un registro sí es necesario tener Traccar instalado. En mi configuración, tengo Traccar ejecutándose en un contenedor LXC detrás de un servidor Proxmox, protegido por un proxy inverso. A continuación, te explico cómo configurarlo:
 
 ## Traccar
 
@@ -123,17 +127,19 @@ bash -c "$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/c
 | Access List  | Public |
 
 2. Ahora vamos a la pestaña SSL para generar un certificado para nuestro subdominio. Selecciona la opción "Request a new certificate" y marca "Use a DNS Challenge". En el campo DNS Provider, elige DuckDNS. Aparecerá un apartado llamado "Credentials File Content". En el cuadro de texto, reemplaza "your-duckdns-token" con el token que copiaste en el paso 1 desde la web de DuckDNS.
+
 3. A continuación, agrega un nuevo host. En el campo de nombre del host, escribe el subdominio que creaste, es decir, subdominio.duckdns.org.
+
 4. Por último, ingresa el correo con el que te has registrado en Let's Encrypt (si aún no te has registrado, hazlo). Acepta los términos y haz clic en Guardar.
 
-IMPORTANTE: En la versión de Proxy Manager que estoy utilizando, encontré un error con el certbot para DuckDNS. Tuve que acceder a la máquina de NGINX a través de SSH y ejecutar el siguiente comando: `pip install certbot-dns-duckdns`
+IMPORTANTE: En la versión de Proxy Manager que estoy utilizando, encontré un error con el certbot para DuckDNS. Tuve que acceder a la máquina de NGINX a través de SSH y ejecutar el siguiente comando: `pip install certbot-dns-duckdns` (también puedes acceder desde Proxmox).
 
 5. No podemos habilitar ninguna casilla como Force SSL, ya que Traccar solo acepta conexiones HTTP (hasta ahora no he logrado configurarlo para que acepte HTTPS). Dicho esto, podemos asegurar que el acceso está protegido hasta llegar a nuestro router, pero una vez dentro de la red local, la conexión ya se realiza por HTTP. Supongo que tu red local la consideras un espacio "seguro".
-6. 
-Con esta configuración, podemos afirmar que nuestro acceso está protegido mientras atraviesa la red externa, pero en el interior de nuestra red local, la comunicación sigue siendo HTTP.
+
+6. Con esta configuración, podemos afirmar que nuestro acceso está protegido mientras atraviesa la red externa, pero en el interior de nuestra red local, la comunicación sigue siendo HTTP.
 
 ## Comandos de rescate
-He decidido agregar un plan B de rescate en caso de que todo falle. Dado que el módem puede recibir, leer y enviar SMS (¡qué tan retro suena eso!), se puede utilizar como una vía de comunicación alternativa con el módulo. No importa cómo se envíe el mensaje: mayúsculas, minúsculas o una combinación de ambas; el texto recibido se convertirá automáticamente a minúsculas.
+He decidido agregar un plan B de rescate en caso de que todo falle. Dado que el módem puede recibir, leer y enviar SMS (¡qué retro suena eso!), se puede utilizar como una vía de comunicación alternativa con el módulo. No importa cómo se envíe el mensaje: mayúsculas, minúsculas o una combinación de ambas; el texto recibido se convertirá automáticamente a minúsculas.
 
 Además, como los SMS entre números de teléfono DIGI son gratuitos, no tengo que preocuparme por los costos.
 
