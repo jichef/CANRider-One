@@ -178,7 +178,7 @@ Además, evidentemente necesitas conectar todo... necesitas un transciever SN65H
 [Carcasa impresa](https://www.thingiverse.com/thing:5861376)
 
 ## Velocidad del bus
-La velocidad del bus de Supersoco es 250kbps, pero si deseas usar este proyecto y no sabes la velocidad del bus de ti vehiculo, te dejo un .ino que escucha a diferentes velocidades. Empieza en 125kbps y cada 5 segundos va subiendo y va informando de lo que escucha.
+La velocidad del bus de Supersoco es 250kbps, pero si deseas usar este proyecto y no sabes la velocidad del bus de ti vehiculo, te dejo un [.ino](ReceptorTWAI_speed/Receptor_TWAI_multiplespeed.ino) que escucha a diferentes velocidades. Empieza en 125kbps y cada 5 segundos va subiendo y va informando de lo que escucha.
 
 ## Licencia
 Este proyecto está bajo la licencia [MIT](LICENSE).
