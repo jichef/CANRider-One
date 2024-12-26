@@ -167,10 +167,15 @@ Estoy seguro que se puede usar con otros módems, por lo que en ´globals.cpp´p
 
 Compila. 
 
+## Conexiones
+Además, evidentemente necesitas conectar todo... necesitas un transciever SN65HVD230 al que debes eliminarle una de sus resistencias. Se utilizan los pines del ESP32 32 para TX y 33 para RX del transciever. El CANL y H del mismo deberan conectarse a la moto. Afinaré próximamente con fotografias.
+
 ¡Ah! Me olvidaba. En thingiverse.com tienes la carcasa para imprimirla en 3D.
 
 [Carcasa impresa](https://www.thingiverse.com/thing:5861376)
 
+## Velocidad del bus
+La velocidad del bus de Supersoco es 250kbps, pero si deseas usar este proyecto y no sabes la velocidad del bus de ti vehiculo, te dejo un .ino que escucha a diferentes velocidades. Empieza en 125kbps y cada 5 segundos va subiendo y va informando de lo que escucha.
 
 ## Licencia
 Este proyecto está bajo la licencia [MIT](LICENSE).
