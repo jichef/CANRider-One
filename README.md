@@ -185,7 +185,9 @@ Estoy seguro que se puede usar con otros módems, por lo que en ´globals.cpp´p
 Compila. 
 
 ## Conexiones
-Además, evidentemente necesitas conectar todo. Necesitas un [transciever SN65HVD230](https://es.aliexpress.com/item/1005005334841319.html?spm=a2g0o.productlist.main.3.562bwUEbwUEbnJ&algo_pvid=c0fde24f-6404-4207-8548-a5346b5d350f&algo_exp_id=c0fde24f-6404-4207-8548-a5346b5d350f-1&pdp_npi=4%40dis%21EUR%211.40%210.99%21%21%211.42%211.00%21%40210385bb17352526104448446eabf4%2112000032650245761%21sea%21ES%210%21ABX&curPageLogUid=BfAzKAmOFKat&utparam-url=scene%3Asearch%7Cquery_from%3A) al que debes eliminarle una de sus resistencias (da igual si es R1 o R2). Se utilizan los pines del ESP32 32 para TX y 33 para RX del transciever. Están elegidos esos para que queden juntos 3.3V, GND, 32 y 33. Directos al transciever. El CANL y H del mismo deberan conectarse a la moto. 
+Además, evidentemente necesitas conectar todo. Necesitas un [transciever SN65HVD230](https://es.aliexpress.com/item/1005005334841319.html?spm=a2g0o.productlist.main.3.562bwUEbwUEbnJ&algo_pvid=c0fde24f-6404-4207-8548-a5346b5d350f&algo_exp_id=c0fde24f-6404-4207-8548-a5346b5d350f-1&pdp_npi=4%40dis%21EUR%211.40%210.99%21%21%211.42%211.00%21%40210385bb17352526104448446eabf4%2112000032650245761%21sea%21ES%210%21ABX&curPageLogUid=BfAzKAmOFKat&utparam-url=scene%3Asearch%7Cquery_from%3A). En este momento tienes dos opciones. Primero ¿tienes una ECU? si ya tienes una tienes que saber que es la encargada de mandar la hora al display. Si quieres mantener la hora debes dejarla conectada; en este caso tendras que cortar una resistencia a tu transceiver (da igual si es R1 o R2). En el caso que no dispongas de ECU o simplemente te importe un carajo la hora en el display NO ELIMINES NINGUNA resistencia.
+
+Se utilizan los pines del ESP32 32 para TX y 33 para RX del transciever. Están elegidos esos para que queden juntos 3.3V, GND, 32 y 33. Directos al transciever. El CANL y H del mismo deberan conectarse a la moto. 
 
 ![Trasnceiver-tsim](https://github.com/jichef/CANRider-One/blob/main/images/transciever-tsim.jpg)
 
