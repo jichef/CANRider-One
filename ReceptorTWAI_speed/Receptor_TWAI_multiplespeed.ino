@@ -4,9 +4,11 @@
 QueueHandle_t canQueue;
 const int rx_queue_size = 10;  // Tamaño de la cola
 
-unsigned long previousMillis = 0;  // Variable para controlar el tiempo
-const long interval = 5000;         // Intervalo de 5 segundos para cambiar la velocidad CAN
-int speedIndex = 0;                 // Índice para cambiar entre las velocidades
+unsigned long previousMillisRx = 0;  // Variable para controlar la recepción de mensajes
+unsigned long previousMillisSpeed = 0;  // Variable para controlar el cambio de velocidad
+const long intervalSpeed = 5000;  // Intervalo de 5 segundos para cambiar la velocidad CAN
+const long intervalRx = 3;        // Intervalo de 3 ms para recepción de mensajes
+int speedIndex = 0;               // Índice para cambiar entre las velocidades
 const int speeds[] = {125, 250, 500, 1000};  // Velocidades disponibles
 
 // Configuración global
@@ -25,8 +27,8 @@ void setup() {
     // Configuración del bus CAN (pines TX y RX)
     g_config = {
         .mode = TWAI_MODE_NORMAL,
-        .tx_io = GPIO_NUM_32,   // Pin TX cambiado a 32
-        .rx_io = GPIO_NUM_33,   // Pin RX cambiado a 33
+        .tx_io = GPIO_NUM_4,   // Pin TX cambiado a 32
+        .rx_io = GPIO_NUM_5,   // Pin RX cambiado a 33
         .clkout_io = TWAI_IO_UNUSED,
         .bus_off_io = TWAI_IO_UNUSED,
         .tx_queue_len = 10,
@@ -36,8 +38,8 @@ void setup() {
         .intr_flags = 0,      // Sin interrupciones
     };
 
-    // Configuración inicial de la velocidad del bus CAN (250 kbps)
-    t_config = TWAI_TIMING_CONFIG_250KBITS();  // Configuración a 250 kbps
+    // Configuración inicial de la velocidad del bus CAN (125 kbps)
+    t_config = TWAI_TIMING_CONFIG_125KBITS();
     f_config = TWAI_FILTER_CONFIG_ACCEPT_ALL(); // Acepta todos los mensajes
 
     // Inicializa el bus CAN
@@ -54,9 +56,9 @@ void setup() {
 void loop() {
     unsigned long currentMillis = millis();
 
-    // Se establece el tiempo de espera similar al primer código (3 ms)
-    if (currentMillis - previousMillis >= 3) {
-        previousMillis = currentMillis;
+    // Procesar recepción de mensajes CAN
+    if (currentMillis - previousMillisRx >= intervalRx) {
+        previousMillisRx = currentMillis;
 
         // Recibe los mensajes CAN y los coloca en la cola
         twai_message_t rx_message;
@@ -65,35 +67,33 @@ void loop() {
             if (xQueueSend(canQueue, &rx_message, 0) != pdTRUE) {
                 Serial.println("Error al agregar mensaje a la cola");
             }
-        } else {
-            Serial.println("No se recibió mensaje CAN");
         }
     }
 
-    // Procesar los mensajes desde la cola
+    // Procesar mensajes desde la cola
     twai_message_t rx_message;
     if (xQueueReceive(canQueue, &rx_message, 0) == pdTRUE) {
         // Mostrar el ID del mensaje
         Serial.print("ID: 0x");
         Serial.print(rx_message.identifier, HEX);
         Serial.print(" - Datos: ");
-        
+
         // Mostrar todos los bytes del mensaje
         for (int i = 0; i < rx_message.data_length_code; i++) {
-            Serial.print(rx_message.data[i], HEX); // Mostrar cada byte en formato hexadecimal
+            Serial.print(rx_message.data[i], HEX);
             Serial.print(" ");
         }
-        Serial.println();  // Nueva línea después de mostrar los bytes
+        Serial.println();
     }
 
-    // Cambiar la velocidad de CAN cada intervalo de 5 segundos
-    if (currentMillis - previousMillis >= interval) {
-        previousMillis = currentMillis;
+    // Cambiar la velocidad del bus CAN cada 5 segundos
+    if (currentMillis - previousMillisSpeed >= intervalSpeed) {
+        previousMillisSpeed = currentMillis;
 
         // Cambiar a la siguiente velocidad en el arreglo de velocidades
-        speedIndex = (speedIndex + 1) % 4;  // Aumentar y volver a 0 después de 1000 kbps
+        speedIndex = (speedIndex + 1) % 4;  // Avanza al siguiente índice de velocidad
 
-        // Configurar la velocidad según el índice
+        // Configurar la nueva velocidad
         switch (speeds[speedIndex]) {
             case 125:
                 t_config = TWAI_TIMING_CONFIG_125KBITS();
@@ -113,7 +113,7 @@ void loop() {
                 break;
         }
 
-        // Detener y reiniciar el driver para aplicar la nueva configuración
+        // Detener y reiniciar el driver con la nueva configuración
         twai_stop();
         twai_driver_uninstall();
         twai_driver_install(&g_config, &t_config, &f_config);
