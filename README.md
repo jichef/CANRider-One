@@ -17,6 +17,16 @@ Ideal para entusiastas de la tecnología y la movilidad eléctrica, **CANRider O
 
 ![Captura de Traccar](https://github.com/jichef/CANRider-One/blob/main/capture_traccar.png)
 
+## Requisitos
+
+- Vehículo que disponga de circuito CAN
+- [LilyGo TSIM7000G 16MB (Aliexpress, también lo tienes en Amazon)](https://es.aliexpress.com/item/4000542688096.html?spm=a2g0o.productlist.main.3.32cbJudJJudJ2w&algo_pvid=415d3a53-2736-4e1c-81be-6b7a21f6e6fb&algo_exp_id=415d3a53-2736-4e1c-81be-6b7a21f6e6fb-1&pdp_npi=4%40dis%21EUR%2141.59%2141.59%21%21%2142.24%2142.24%21%4021038e6617352498647415124efd6a%2112000032432563392%21sea%21ES%210%21ABX&curPageLogUid=8nMRXncF299e&utparam-url=scene%3Asearch%7Cquery_from%3A) (aunque supongo que también valdrán otros, sólo he probado con el TSIM7670G -y no a fondo-)
+- [Transceiver SN65HVD230 (Aliespress, también lo tienes en Amazon)](https://es.aliexpress.com/item/1005005334841319.html?spm=a2g0o.productlist.main.3.562bwUEbwUEbnJ&algo_pvid=c0fde24f-6404-4207-8548-a5346b5d350f&algo_exp_id=c0fde24f-6404-4207-8548-a5346b5d350f-1&pdp_npi=4%40dis%21EUR%211.40%210.99%21%21%211.42%211.00%21%40210385bb17352526104448446eabf4%2112000032650245761%21sea%21ES%210%21ABX&curPageLogUid=BfAzKAmOFKat&utparam-url=scene%3Asearch%7Cquery_from%3A)
+- Tarjeta SIM (Digi tiene una tarifa de datos con 2GB -que sobra- pero ofrece SMS gratis entre números DIGI)
+- 🚨Servidor Traccar🚨. Este dato es importante tenerlo en cuenta. La localización GPS se graba en un servidor LOCAL. Tienes que disponer de esta infraestructura para poder utilizar este servicio. Hay muchas alternativas. Unas más seguras y otras menos: Raspberry Pi, NUC, Proxmox, servicio dedicado de Traccar... Yo he usado un NUC con Proxmox (abajo te explico cómo lo he montado).
+
+Entonces, ¿si no tengo servidor de Traccar, puedo conocer la ubicación GPS y estado de la batería, por ejemplo? Sí, claro que sí. Pero la obtendras por SMS, sé que es muy rudimentario, pero es la única forma de enviar los datos. Se podría enviar por Telegram, por ejemplo, pero eso podría estar en una lista TO-DO.
+
 ## Motivación
 Es bien sabido que la actualización reciente por parte de VMOTO de sus ECUs ha dejado sin servicio a muchos usuarios, obligándolos a adquirir una nueva ECU (y todos sabemos lo costosas que son). Además, su app puede pasar largos períodos sin conexión.
 
