@@ -8,7 +8,9 @@
 #define POLLING_RATE_MS 100
 
 unsigned long statusPrintMillis = 0;  // Para imprimir el estado del bus
+unsigned long lastDecrementMillis = 0; // Para el temporizador de decremento
 int currentMessageIndex = 0;       // Índice del mensaje actual
+uint8_t firstByteValue = 100; // Valor inicial del primer byte del mensaje 0x541
 
 // Estructura para almacenar mensajes CAN
 typedef struct {
@@ -85,6 +87,16 @@ void send_message(CANMessage msg) {
   // Generar datos aleatorios
   generate_random_data(message.data, msg.length);
 
+  // Si el mensaje es el 0x541, modificamos el primer byte para que no sea mayor a 100
+  if (msg.id == 0x541) {
+    message.data[0] = firstByteValue;  // Asignar el valor de firstByteValue
+
+    // Para asegurarnos de que se vea correctamente, colocamos un valor predeterminado en los otros bytes
+    for (int i = 1; i < msg.length; i++) {
+      message.data[i] = 0x00; // Rellenamos el resto de los bytes con un valor predeterminado
+    }
+  }
+
   // Transmitir el mensaje
   if (twai_transmit(&message, pdMS_TO_TICKS(1000)) == ESP_OK) {
     Serial.printf("Mensaje enviado -> ID: 0x%03X, Data: ", msg.id);
@@ -121,5 +133,17 @@ void loop() {
   if (currentMillis - statusPrintMillis >= 5000) {
     statusPrintMillis = currentMillis;
     print_bus_status();
+  }
+
+  // Disminuir el primer byte del mensaje 0x541 cada 5 segundos
+  if (currentMillis - lastDecrementMillis >= 5000) {
+    lastDecrementMillis = currentMillis;
+
+    // Disminuir el valor del primer byte y reciclar al llegar a 0
+    if (firstByteValue > 0) {
+      firstByteValue--;
+    } else {
+      firstByteValue = 100;  // Reiniciar el ciclo al llegar a 0
+    }
   }
 }
