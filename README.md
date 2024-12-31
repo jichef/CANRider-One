@@ -9,6 +9,10 @@
 
 Ideal para entusiastas de la tecnología y la movilidad eléctrica, **CANRider One** ofrece una experiencia optimizada para comprender y mejorar el rendimiento de tu motocicleta.
 
+Este proyecto está adaptado para SuperSoco CPX. 
+
+Es un proyecto muy básico y, por supuesto, no me hago responsable de la que puedas liar ni de si te funciona. No debería ocurrir nada, pues en nigún momento el proyecto final envía tramas CAN a la moto (podría bloquear tu BMS). Lo he documentado lo mejor que he podido. 
+
 ## Características
 - 📊 **Monitoreo en tiempo real**: Mantente informado sobre los datos clave de tu motocicleta.
 - ⚡ **Conectividad CAN**: Utiliza el protocolo estándar para vehículos eléctricos.
