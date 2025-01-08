@@ -25,9 +25,13 @@ Es un proyecto muy básico y, por supuesto, no me hago responsable de la que pue
 
 - Vehículo que disponga de circuito CAN
 - [LilyGo TSIM7000G 16MB (Aliexpress, también lo tienes en Amazon)](https://es.aliexpress.com/item/4000542688096.html?spm=a2g0o.productlist.main.3.32cbJudJJudJ2w&algo_pvid=415d3a53-2736-4e1c-81be-6b7a21f6e6fb&algo_exp_id=415d3a53-2736-4e1c-81be-6b7a21f6e6fb-1&pdp_npi=4%40dis%21EUR%2141.59%2141.59%21%21%2142.24%2142.24%21%4021038e6617352498647415124efd6a%2112000032432563392%21sea%21ES%210%21ABX&curPageLogUid=8nMRXncF299e&utparam-url=scene%3Asearch%7Cquery_from%3A) (aunque supongo que también valdrán otros, sólo he probado con el TSIM7670G -y no a fondo-)
-- [Transceiver SN65HVD230 (Aliespress, también lo tienes en Amazon)](https://es.aliexpress.com/item/1005005334841319.html?spm=a2g0o.productlist.main.3.562bwUEbwUEbnJ&algo_pvid=c0fde24f-6404-4207-8548-a5346b5d350f&algo_exp_id=c0fde24f-6404-4207-8548-a5346b5d350f-1&pdp_npi=4%40dis%21EUR%211.40%210.99%21%21%211.42%211.00%21%40210385bb17352526104448446eabf4%2112000032650245761%21sea%21ES%210%21ABX&curPageLogUid=BfAzKAmOFKat&utparam-url=scene%3Asearch%7Cquery_from%3A)
+- [Transciever SN65HVD230](https://www.amazon.es/gp/product/B07VG3Z9GT/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1).
 - Tarjeta SIM (Digi tiene una tarifa de datos con 2GB -que sobra- pero ofrece SMS gratis entre números DIGI)
 - 🚨Servidor Traccar🚨. Este dato es importante tenerlo en cuenta. La localización GPS se graba en un servidor LOCAL. Tienes que disponer de esta infraestructura para poder utilizar este servicio. Hay muchas alternativas. Unas más seguras y otras menos: Raspberry Pi, NUC, Proxmox, servicio dedicado de Traccar... Yo he usado un NUC con Proxmox (abajo te explico cómo lo he montado).
+- [Transciever SN65HVD230](https://www.amazon.es/gp/product/B07VG3Z9GT/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1).
+- [Carcasa impresa](https://www.thingiverse.com/thing:5861376)
+- [ODB2 MACHO de 6 pin](https://es.aliexpress.com/item/1005004526698938.html?spm=a2g0o.order_list.order_list_main.5.445f194dxILzUf&gatewayAdapt=glo2esp).
+- Conversor de [12V a 5V](https://www.amazon.es/gp/product/B0C3HDNT8R/ref=ppx_yo_dt_b_asin_title_o00_s00?ie=UTF8&psc=1) 
 
 Entonces, ¿si no tengo servidor de Traccar, puedo conocer la ubicación GPS y estado de la batería, por ejemplo? Sí, claro que sí. Pero la obtendras por SMS, sé que es muy rudimentario, pero es la única forma de enviar los datos. Se podría enviar por Telegram, por ejemplo, pero eso podría estar en una lista TO-DO.
 
@@ -189,7 +193,7 @@ Estoy seguro que se puede usar con otros módems, por lo que en ´globals.cpp´p
 Compila. 
 
 ## Conexiones
-Además, evidentemente necesitas conectar todo. Necesitas un [transciever SN65HVD230](https://es.aliexpress.com/item/1005005334841319.html?spm=a2g0o.productlist.main.3.562bwUEbwUEbnJ&algo_pvid=c0fde24f-6404-4207-8548-a5346b5d350f&algo_exp_id=c0fde24f-6404-4207-8548-a5346b5d350f-1&pdp_npi=4%40dis%21EUR%211.40%210.99%21%21%211.42%211.00%21%40210385bb17352526104448446eabf4%2112000032650245761%21sea%21ES%210%21ABX&curPageLogUid=BfAzKAmOFKat&utparam-url=scene%3Asearch%7Cquery_from%3A). En este momento tienes dos opciones. Primero ¿tienes una ECU? si ya tienes una tienes que saber que es la encargada de mandar la hora al display. Si quieres mantener la hora debes dejarla conectada; en este caso tendras que cortar una resistencia a tu transceiver (da igual si es R1 o R2). En el caso que no dispongas de ECU o simplemente te importe un carajo la hora en el display NO ELIMINES NINGUNA resistencia.
+Además, evidentemente necesitas conectar todo. Necesitas un [transciever SN65HVD230](https://www.amazon.es/gp/product/B07VG3Z9GT/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1) (ojo, no recomiendan comprarlo en Aliexpress). En este momento tienes dos opciones. Primero ¿tienes una ECU? si ya tienes una tienes que saber que es la encargada de mandar la hora al display. Si quieres mantener la hora debes dejarla conectada; en este caso tendras que cortar una resistencia a tu transceiver (da igual si es R1 o R2). En el caso que no dispongas de ECU o simplemente te importe un carajo la hora en el display NO ELIMINES NINGUNA resistencia.
 
 Se utilizan los pines del ESP32 32 para TX y 33 para RX del transciever. Están elegidos esos para que queden juntos 3.3V, GND, 32 y 33. Directos al transciever. El CANL y H del mismo deberan conectarse a la moto. 
 
@@ -198,6 +202,22 @@ Se utilizan los pines del ESP32 32 para TX y 33 para RX del transciever. Están 
 ¡Ah! Me olvidaba. En thingiverse.com tienes la carcasa muy chula para imprimirla en 3D.
 
 [Carcasa impresa](https://www.thingiverse.com/thing:5861376)
+
+Para poder conectar el CANBus a la moto puedes hacerlo como bien dije anteriormente de dos maneras. La más cómoda es detrás, pues así mantienes la hora (dejando la ECU original conectada). Para ello he comprado una clavija [ODB2 MACHO de 6 pin](https://es.aliexpress.com/item/1005004526698938.html?spm=a2g0o.order_list.order_list_main.5.445f194dxILzUf&gatewayAdapt=glo2esp). Solo son necesarios el PIN6 que es el + de 12V y el GND que es el PIN1; además el CANH PIN2 y el CANL el PIN5. La salida es de 12V, por tanto, compré además este conversor de [12V a 5V](https://www.amazon.es/gp/product/B0C3HDNT8R/ref=ppx_yo_dt_b_asin_title_o00_s00?ie=UTF8&psc=1) para alimentar el ESP32.
+
+La clavija ODB2 no cabe en el compartimento pues viene con una pestañita en su parte inferior que he cortado:
+
+![ODB2](https://github.com/jichef/CANRider-One/blob/main/images/photo_2_2025-01-08_23-35-06.jpg)
+
+Tras el corte queda algo así:
+
+![ODB2_modificado](https://github.com/jichef/CANRider-One/blob/main/images/photo_1_2025-01-08_23-35-06.jpg)
+
+Una vez conectado todo... Voilá!
+![Running_CANRider](https://github.com/jichef/CANRider-One/blob/main/images/photo_1_2025-01-08_23-33-56.jpg)
+![Running_CANRider_detail](https://github.com/jichef/CANRider-One/blob/main/images/photo_2_2025-01-08_23-33-56.jpg)
+
+Solo queda abrir algunos agujerillos con el taladro para poder pasar los cables perfectamente sin que queden por fuera para dejarlo un poco más estético.
 
 ## Velocidad del bus
 La velocidad del bus de Supersoco CPX es 250kbps, pero si deseas usar este proyecto y no sabes la velocidad del bus de tu vehículo, te dejo un [.ino](ReceptorTWAI_speed/Receptor_TWAI_multiplespeed.ino) que escucha a diferentes velocidades. Empieza en 125kbps y cada 5 segundos aumenta la velocidad hasta 1000Kbps mientras informa de lo que recibe. Después puedes usar este otro [receptor TWAI](ReceptorTWAI_speed/Receptor_TWAI.ino) con la velocidad que elijas para escuchar todo lo que se cuece por tu circuito CAN.
