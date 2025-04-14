@@ -4,13 +4,14 @@
 #include "globals.h"
 
 // Encender el módem
-void modemPowerOn() {
-    logToOutputln(MODEM_POWER_ON);
-    pinMode(PWR_PIN, OUTPUT);
+ void modemPowerOn() {
+    pinMode(PWR_PIN, OUTPUT);     // ← esta línea puede estar usando un valor inválido
     digitalWrite(PWR_PIN, LOW);
-    delay(1000);
+    delay(100);
     digitalWrite(PWR_PIN, HIGH);
-}
+    delay(1000); // Pulso de encendido
+ }
+
 
 // Apagar el módem
 void modemPowerOff() {
@@ -31,19 +32,18 @@ void modemRestart() {
 
 // Inicializar el módem
 void initializeModem(TinyGsm &modem) {
-    logToOutputln(INIT_MODEM);
-
+    modem.init();
+    logToOutputln("→ Reiniciando módem...");
     if (!modem.restart()) {
         logToOutputln(ERROR_MODEM_INIT);
     }
 
-    // Desbloquea la SIM si tiene código PIN
-if (strlen(GSM_PIN) > 0 && modem.getSimStatus() != 3) {
-    modem.simUnlock(GSM_PIN);
-}
+    logToOutputln("→ Desbloqueando SIM (si es necesario)");
+    if (strlen(GSM_PIN) > 0 && modem.getSimStatus() != 3) {
+        modem.simUnlock(GSM_PIN);
+    }
 
-    // Verificar el estado de la SIM
-    logToOutputln(NETWORK_CHECK);
+    logToOutputln("→ Verificando estado de la SIM");
     modem.sendAT("+CPIN?");
     String response = modem.stream.readStringUntil('\n');
     logToOutput(AT_RESPONSE);
@@ -55,8 +55,7 @@ if (strlen(GSM_PIN) > 0 && modem.getSimStatus() != 3) {
         logToOutputln(SIM_NOT_READY_MESSAGE);
     }
 
-    // Configurar el módem
-    logToOutputln(CONFIGURING_MODEM);
+    logToOutputln("→ Configurando el módem");
     modem.sendAT("+CMGF=1");
     modem.waitResponse();
     modem.sendAT("+CNMI=2,1,0,0,0");
@@ -67,6 +66,7 @@ if (strlen(GSM_PIN) > 0 && modem.getSimStatus() != 3) {
     uint32_t timeout = millis();
 
     do {
+        logToOutputln("→ Verificando señal...");
         int16_t signalQuality = modem.getSignalQuality() * -1;
         status = modem.getRegistrationStatus();
 
@@ -90,10 +90,12 @@ if (strlen(GSM_PIN) > 0 && modem.getSimStatus() != 3) {
         delay(800);
     } while (status != REG_OK_HOME && status != REG_OK_ROAMING);
 
+    logToOutputln("→ Obteniendo IMEI...");
     String imei = modem.getIMEI();
     logToOutput(MODEM_IMEI);
     logToOutputln(imei);
 
+    logToOutputln("→ Activando contexto de red...");
     modem.sendAT("+CNACT=1");
     modem.waitResponse();
 
@@ -106,10 +108,9 @@ if (strlen(GSM_PIN) > 0 && modem.getSimStatus() != 3) {
         res.replace("\r", "");
         res.replace("\n", "");
         modem.waitResponse();
- //       logToOutput(IP_ASSIGNED);
- //       logToOutputln(res);
     }
 
+    logToOutputln("→ Obteniendo parámetros de red...");
     modem.sendAT("+CPSI?");
     if (modem.waitResponse("+CPSI: ") == 1) {
         String res = modem.stream.readStringUntil('\n');
@@ -120,8 +121,9 @@ if (strlen(GSM_PIN) > 0 && modem.getSimStatus() != 3) {
         logToOutputln(res);
     }
 
-    logToOutputln(MODEM_INIT_SUCCESS);
+    logToOutputln("→ MODEM_INIT_SUCCESS");
 }
+
 
 // Activar GPS
 void enableGPS(TinyGsm &modem) {
