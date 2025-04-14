@@ -66,7 +66,6 @@ A continuación, se detalla la descripción de cada archivo:
 | `modem.h`         | Declaraciones de funciones para el manejo del módem.                      |
 | `output.h`        | Declaraciones para funciones de salida de datos.                          |
 | `messages.h`      | Declaraciones relacionadas con los mensajes CAN.                          |
-| `twai.h`          | Declaraciones para funciones relacionadas con TWAI.                       |
 
 # Configuración de Variables Globales
 
