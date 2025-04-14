@@ -33,16 +33,6 @@ extern String myid;
 // Número de teléfono para SMS
 extern String phoneNumber;
 
-// Configuración del CAN bus
-// extern const int CAN_RX_PIN;      // Pin RX del CAN bus
-// extern const int CAN_TX_PIN;      // Pin TX del CAN bus
-// extern const int CAN_BAUD_RATE;   // Velocidad del CAN bus (en bps)
-
-// Configuración de pines del TFT
-extern const int TFT_CS;
-extern const int TFT_DC;
-extern const int TFT_RST;
-
 // Configuración de pines del módem
 extern const int PWR_PIN;
 extern const int PIN_RX;
