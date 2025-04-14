@@ -60,7 +60,6 @@ A continuación, se detalla la descripción de cada archivo:
 | `modem.cpp`       | Control y comunicación con el módem, incluyendo comandos AT.              |
 | `sms.cpp`         | Implementación de la lógica para la gestión de mensajes SMS.               |
 | `output.cpp`      | Gestión de la salida de datos, como logs o pantallas.                     |
-| `twai.cpp`        | Implementación de la lógica para la gestión del bus TWAI (protocolo CAN). |
 | `sms.h`           | Declaraciones de funciones relacionadas con SMS.                          |
 | `globals.h`       | Declaraciones de variables globales para uso compartido entre módulos.    |
 | `modem.h`         | Declaraciones de funciones para el manejo del módem.                      |
