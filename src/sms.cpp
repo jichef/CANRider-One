@@ -5,53 +5,83 @@
 #include "modem.h"
 #include <Arduino.h>
 
-// Definir palabra clave de GPS
-#define SMS_KEYWORD_GPS "gps"
-
-// Variables globales para almacenar la última ubicación
-
+// Obtener últimas coordenadas conocidas
 float getLastLat() {
-    // Deberías tener una forma de obtener las últimas coordenadas lat
-    return lat;  // Usa la variable `lat` que tienes en el código de `taskGPSTraccar`
+    return lat;
 }
 
 float getLastLon() {
-    // Deberías tener una forma de obtener las últimas coordenadas lon
-    return lon;  // Usa la variable `lon` que tienes en el código de `taskGPSTraccar`
+    return lon;
 }
 
 void sendSMS(TinyGsm &modem, const String &phoneNumber, const String &message) {
-    modem.sendSMS(phoneNumber, message); // Lógica para enviar SMS
+    modem.sendSMS(phoneNumber, message);
 }
 
-// Verificar si hay SMS nuevos y procesarlos
 void checkForSMS(TinyGsm &modem) {
-  readSMS(modem);
-}
+    if (!modem.stream.available()) return;
 
-void readSMS(TinyGsm &modem) {
-    logToOutputln("Reading SMS...");
-    modem.sendAT("+CMGL=\"REC UNREAD\"");  // Obtener todos los mensajes no leídos
-    delay(1000);  // Esperar un poco para que el módem procese el comando
+    String line = modem.stream.readStringUntil('\n');
+    line.trim();
 
-    // Leer la respuesta del módem
-    String response = modem.stream.readString();
-    logToOutputln("SMS List: ");
-    logToOutputln(response);
+    if (!line.startsWith("+CMTI:")) return;
 
-    // Verificar si hubo un error
-    if (response.indexOf("ERROR") != -1) {
-        logToOutputln("Error while reading SMS. Retrying...");
-        modem.sendAT("+CMGL=\"REC UNREAD\"");  // Reintentar la lectura
-        delay(2000);  // Esperar un poco más antes de leer
-        response = modem.stream.readString(); // Volver a leer la respuesta
-        logToOutputln("Retry SMS List: ");
-        logToOutputln(response);
+    logToOutputln("SMS detectado: " + line);
+
+    int indexStart = line.indexOf(",") + 1;
+    if (indexStart <= 0) {
+        logToOutputln("Índice inválido en CMTI.");
+        return;
     }
 
-    // Convertir el texto recibido a minúsculas para comparación insensible a mayúsculas
-    response.toLowerCase();  // Convertir todo el texto a minúsculas
-    // Extraer el número de teléfono del remitente
+    String indexStr = line.substring(indexStart);
+    indexStr.trim();
+    int msgIndex = indexStr.toInt();
+
+    if (msgIndex <= 0) {
+        logToOutputln("Índice de mensaje no válido.");
+        return;
+    }
+
+    String command = "+CMGR=" + String(msgIndex);
+    modem.sendAT(command);
+    delay(500);
+
+    String smsResponse = "";
+    String partial;
+    unsigned long start = millis();
+    while (millis() - start < 3000) {  // Esperar hasta 3s máximo
+        if (modem.stream.available()) {
+            partial = modem.stream.readStringUntil('\n');
+            smsResponse += partial + "\n";
+
+            if (partial.indexOf("OK") != -1) {
+                break;
+            }
+        }
+    }
+
+    if (smsResponse.length() == 0) {
+        logToOutputln("Error al leer contenido del SMS.");
+        return;
+    }
+
+    logToOutputln("Contenido del SMS:");
+    logToOutputln(smsResponse);
+
+    processSMS(modem, smsResponse);
+    
+    modem.sendAT("+CMGD=" + String(msgIndex));
+    logToOutputln("SMS eliminado.");
+}
+
+
+
+void processSMS(TinyGsm &modem, const String &response) {
+    String content = response;
+    content.toLowerCase();
+    content.trim();
+
     char senderPhoneNumber[20] = "";
     char *firstQuote = strchr(response.c_str(), '"');
     if (firstQuote) {
@@ -62,99 +92,57 @@ void readSMS(TinyGsm &modem) {
                 char *fourthQuote = strchr(thirdQuote + 1, '"');
                 if (fourthQuote) {
                     strncpy(senderPhoneNumber, thirdQuote + 1, fourthQuote - thirdQuote - 1);
-                    senderPhoneNumber[fourthQuote - thirdQuote - 1] = '\0'; // Asegurar terminación de cadena
+                    senderPhoneNumber[fourthQuote - thirdQuote - 1] = '\0';
                 }
             }
         }
     }
-    logToOutputln("Sender phone number detected: " + String(senderPhoneNumber));
 
-    // Verificar si contiene la palabra "reboot"
-    if (response.indexOf(SMS_KEYWORD_REBOOT) != -1) {
-        logToOutputln("Reboot command detected.");
-        // Comparar con el número de teléfono almacenado
-        if (String(senderPhoneNumber) == phoneNumber) {
-            logToOutputln("Message from the correct phone number. Restarting...");
+    String sender = String(senderPhoneNumber);
+    sender.trim();
 
-            // Enviar un SMS de confirmación antes del reinicio
-            String confirmationMessage = "Reinicio del sistema en curso...";
-            sendSMS(modem, senderPhoneNumber, confirmationMessage);  // Enviar SMS de confirmación
-            logToOutputln("SMS sent to " + String(senderPhoneNumber));
+    logToOutputln("Comparando remitente con autorizado:");
+    logToOutputln("SMS: " + sender);
+    logToOutputln("Autorizado: " + String(phoneNumber));
 
-            // Asegúrate de dar tiempo suficiente para enviar el SMS
-            delay(2000);  // Esperar 2 segundos antes de reiniciar
+    bool autorizado = (sender == phoneNumber) || (content.indexOf(SMS_KEYWORD_SECURITY) != -1);
 
-            // Reiniciar el ESP32
-            logToOutputln("Rebooting...");
-            ESP.restart();  // Reiniciar el ESP32
+    if (autorizado) {
+        logToOutputln("✅ Autorización confirmada.");
+
+        if (content.indexOf(SMS_KEYWORD_REBOOT) != -1) {
+            logToOutputln("Reboot command detected.");
+            sendSMS(modem, sender, "Reinicio en curso...");
+            modem.sendAT("+CMGD=1,4");
+            delay(2000); // Opcional en FreeRTOS si usas múltiples tareas
+            vTaskEndScheduler();             
+            ESP.restart();        // Luego reinicia
         }
-    }
+        else if (content.indexOf(SMS_KEYWORD_GPS) != -1) {
+            logToOutputln("GPS request command detected.");
+            float lastLat = getLastLat();
+            float lastLon = getLastLon();
 
-    // Verificar si contiene la palabra "gps"
-    if (response.indexOf(SMS_KEYWORD_GPS) != -1) {
-        logToOutputln("GPS request command detected.");
+            float batteryState = (((float)battery - 3.0) / 1.2) * 100.0;
+            batteryState = constrain(batteryState, 0, 100);
 
-        // Obtener la última ubicación GPS (lat y lon deberían ser proporcionados por la función sendToTraccar)
-        float lat = getLastLat(); // Asegúrate de tener una función que devuelva lat
-        float lon = getLastLon(); // Asegúrate de tener una función que devuelva lon
+            if (lastLat != 0.0 && lastLon != 0.0) {
+                String link = "https://www.google.com/maps?q=" + String(lastLat, 6) + "," + String(lastLon, 6);
+                String gpsResponse = "Ultima ubicacion GPS: " + link +
+                                     ". Bateria al " + String(batterylevel, 1) +
+                                     "%. El ESP al " + String(batteryState, 1) + "%";
+                sendSMS(modem, sender, gpsResponse);
+            } else {
+                String gpsResponse = "No hay ubicacion GPS valida. Bateria al " + String(batterylevel, 1) +
+                                     "%. El ESP al " + String(batteryState, 1) + "%";
+                sendSMS(modem, sender, gpsResponse);
 
-        // Verificar si la ubicación GPS es válida
-        if (lat != 0.0 && lon != 0.0) {
-            // Generar el enlace de Google Maps con la ubicación
-            String gpsLink = "https://www.google.com/maps?q=" + String(lat, 6) + "," + String(lon, 6);
-
-            // Enviar la respuesta con la URL de Google Maps
-            String gpsResponse = "Última ubicación GPS: " + gpsLink;
-            sendSMS(modem, senderPhoneNumber, gpsResponse);  // Enviar el enlace con la ubicación
-            logToOutputln("GPS link sent to " + String(senderPhoneNumber));
-        } else {
-            // Si no hay ubicación disponible, enviar un mensaje de error
-            String gpsResponse = "No se ha obtenido ubicación GPS válida.";
-            sendSMS(modem, senderPhoneNumber, gpsResponse);
-            logToOutputln("No GPS data available. Sent error message to " + String(senderPhoneNumber));
+            }
+            modem.sendAT("+CMGD=1,4");
         }
 
-        // Eliminar el mensaje después de procesarlo
-        modem.sendAT("+CMGD=0");  // Eliminar el primer mensaje leído
-        logToOutputln("Message deleted.");
-    }
-}
-
-void deleteAllSMS(TinyGsm &modem) {
-    logToOutputln("Deleting all SMS...");
-
-    // Verificar la memoria de SMS
-    modem.sendAT("+CPMS?");
-    String response = modem.stream.readString();
-    logToOutputln("Memory status: ");
-    logToOutputln(response);  // Mostrar la memoria utilizada
-
-    // Leer todos los SMS no leídos primero
-    modem.sendAT("+CMGL=\"ALL\"");  // Get all unread SMS 
-    String listResponse = modem.stream.readString();
-    logToOutputln("List of unread messages:");
-    logToOutputln(listResponse);
-
-    // Contar cuántos mensajes no leídos están presentes en la respuesta
-    int messageCount = 0;
-    int index = 0;
-    while ((index = listResponse.indexOf("+CMGL:", index)) != -1) {
-        messageCount++;
-        index += 6;  // Avanzar después de cada "+CMGL:"
-    }
-
-    // Si hay mensajes no leídos, eliminar uno por uno
-    if (messageCount > 0) {
-        for (int i = 1; i <= messageCount; i++) {
-            String deleteCommand = "+CMGD=" + String(i);  // Eliminar mensaje por índice
-            modem.sendAT(deleteCommand);  // Enviar el comando para eliminar el mensaje
-            delay(1000);  // Esperar que el módem procese el comando
-            String deleteResponse = modem.stream.readString();
-            logToOutputln("Delete response for message " + String(i) + ": " + deleteResponse);
-        }
-
-        logToOutputln("All unread messages deleted.");
     } else {
-        logToOutputln("No unread messages found to delete.");
+        logToOutputln("⚠️ Número NO autorizado: " + sender);
+        sendSMS(modem, sender, "No estás autorizado para usar este sistema.");
     }
 }
