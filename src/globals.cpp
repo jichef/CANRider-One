@@ -27,18 +27,6 @@ const char SMS_KEYWORD_SECURITY[] = "********";		// Palabra de seguridad para SM
 const char SMS_KEYWORD_GPS[] = "gps";		     	// Comando para obtener localización GPS por SMS, en minúsculas
 const char SMS_KEYWORD_REBOOT[] = "reboot";		    // Comando para forzar reinicio por SMS, en minúsculas
 
-// Trama CAN para monitorear
-
-// TRAMA_CAN[] = "541"
-// TRAMA_CAN_BYTE[] = "1"
-
-
-
-// Pines del TFT
-const int TFT_CS = 5;
-const int TFT_DC = 21;
-const int TFT_RST = 22;
-
 // Pines del módem
 const int PWR_PIN = 4;
 
