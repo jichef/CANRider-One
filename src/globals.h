@@ -16,8 +16,12 @@ extern String FINALACCURACY;
 extern String FINALIGNITION;
 extern String ignition;
 extern float battery;
+extern float batterylevel;
 extern float lat;  
 extern float lon;  
+extern int localHour;
+extern int minute;
+
 
 
 // Credenciales GSM
@@ -32,6 +36,7 @@ extern String myid;
 
 // Número de teléfono para SMS
 extern String phoneNumber;
+
 
 // Configuración de pines del módem
 extern const int PWR_PIN;
@@ -50,7 +55,7 @@ extern unsigned long VEHIEncendidoDelay; // Tiempo de espera cuando la moto est�
 extern unsigned long VEHIApagadoDelay;  // Tiempo de espera cuando la moto está apagada
 
 // Variables globales adicionales
-extern int batterylevel;
+
 extern bool driver_installed;
 
 // Constantes relacionadas con tiempos
@@ -69,8 +74,7 @@ void reboot();
 extern const char SMS_KEYWORD_GPS[];
 extern const char SMS_KEYWORD_REBOOT[];
 extern const char SMS_KEYWORD_SECURITY[];
-
-// Nombre del dispositivo BT
+extern const char SMS_KEYWORD_TFT[];
 extern const char btDeviceName[];
  
 #endif // GLOBALS_H
