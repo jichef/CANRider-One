@@ -122,6 +122,7 @@ void initializeModem(TinyGsm &modem) {
     }
 
     logToOutputln("→ MODEM_INIT_SUCCESS");
+    
 }
 
 
@@ -148,31 +149,28 @@ void disableGPS(TinyGsm &modem) {
 }
 
 // Obtener datos de GPS
-bool getGPSData(TinyGsm &modem, float &lat, float &lon, float &speed, float &alt, float &accuracy) {
-    logToOutputln(GPS_READING);
-    int vsat, usat, year, month, day, hour, min, sec;
 
-    if (modem.getGPS(&lat, &lon, &speed, &alt, &vsat, &usat, &accuracy, &year, &month, &day, &hour, &min, &sec)) {
-        logToOutput(GPS_LAT);
+bool getGPSData(TinyGsm &modem, float &lat, float &lon, float &speed, float &alt, float &accuracy) {
+    int vsat = 0, usat = 0;
+
+    logToOutputln(GPS_READING);
+    if (modem.getGPS(&lat, &lon, &speed, &alt, &vsat, &usat, &accuracy)) {
+        logToOutput("Latitud: ");
         logToOutputln(String(lat, 6));
-        logToOutput(GPS_LON);
+        logToOutput("Longitud: ");
         logToOutputln(String(lon, 6));
-        logToOutput(GPS_SPEED);
-        logToOutputln(String(speed, 2));
-        logToOutput(GPS_ALT);
-        logToOutputln(String(alt, 2));
-        logToOutput(GPS_ACCURACY);
-        logToOutputln(String(accuracy, 2));
-        logToOutput(GPS_VSAT);
+        logToOutput("Satélites visibles: ");
         logToOutputln(String(vsat));
-        logToOutput(GPS_USAT);
+        logToOutput("Satélites usados: ");
         logToOutputln(String(usat));
         return true;
-    } else {
-        logToOutputln(GPS_ERROR);
-        return false;
     }
+
+    logToOutputln(GPS_FAIL);
+    return false;
 }
+
+
 
 // Conectar a la red GPRS
 bool connectToNetwork(TinyGsm &modem, const char *apn, const char *user, const char *pass) {
