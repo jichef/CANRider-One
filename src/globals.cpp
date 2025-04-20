@@ -6,14 +6,14 @@
 const char btDeviceName[] = "CANRider One"; 
 
 // Credenciales GSM
-const char apn[] = ""; 
+const char apn[] = "internet.digimobil.es"; 
 const char gprsUser[] = "";
 const char gprsPass[] = "";
 const char GSM_PIN[] = ""; 
 
 // Información del servidor Traccar
-const char server[] = ".duckdns.org"; // Tu servidor de Traccar
-String myid = "**************************"; // ID configurada en Traccar
+const char server[] = "***.duckdns.org"; // Tu servidor de Traccar
+String myid = "*****"; // ID configurada en Traccar
 
 // Tiempos de actualización
 unsigned long VEHIEncendidoDelay = 10000; // Tiempo para actualizar ubicación GPS y enviar a Traccar (en milisegundos; cuando hay alimentación USB)
@@ -21,14 +21,19 @@ unsigned long VEHIApagadoDelay = 900000;  // Tiempo para actualizar ubicación G
 
 // Palabras clave para comandos recibidos por SMS
 
-String phoneNumber = ""; 			// Número de teléfono autorizado para SMS (con prefijo internacional)
+String phoneNumber = "+34***"; 			// Número de teléfono autorizado para SMS (con prefijo internacional)
 
-const char SMS_KEYWORD_SECURITY[] = "********";		// Palabra de seguridad para SMS
+const char SMS_KEYWORD_SECURITY[] = "****";		// Palabra de seguridad para SMS
 const char SMS_KEYWORD_GPS[] = "gps";		     	// Comando para obtener localización GPS por SMS, en minúsculas
 const char SMS_KEYWORD_REBOOT[] = "reboot";		    // Comando para forzar reinicio por SMS, en minúsculas
 
 // Pines del módem
 const int PWR_PIN = 4;
+
+// Variables obtención de la hora
+int localHour = 11;
+int minute = 11;
+int vsat = 0, usat = 0;
 
 // Pin ADC para batería
 const int BAT_ADC = 35;
@@ -42,6 +47,7 @@ String FINALACCURACY = "0";
 String FINALIGNITION = "false";
 String ignition = "false";
 float battery = 0.0;
+float batterylevel = 0.0;
 
 // Configuración del módem
 const int PIN_RX = 26;     // Pin RX conectado al TX del módem
@@ -54,7 +60,7 @@ unsigned long noCoverageTime = 0;
 unsigned long lastReadTime = 0;
 
 // Variables globales adicionales
-int batterylevel = 0;
+
 bool driver_installed = false;
 
 // Función para leer el voltaje de la batería
