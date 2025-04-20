@@ -3,9 +3,13 @@
 #include "output.h"
 #include "modem.h"
 #include "sms.h"
+#include "timeutils.h"
 #include <TinyGsmClient.h>
 #include <ArduinoHttpClient.h>
 #include <BluetoothSerial.h>
+extern "C" void* lwip_hook_ip6_input(void* p) {
+  return p; // simplemente devuelve el paquete sin modificar
+}
 
 
 // Definiciones para TinyGSM y configuración
@@ -50,6 +54,7 @@ void setup() {
 
     modemPowerOn();
     initializeModem(modem);
+    
     xTaskCreatePinnedToCore(taskSMSChecker, "SMSTask", 4096, NULL, 1, NULL, 1);
     if (!connectToNetwork(modem, apn, gprsUser, gprsPass)) {
         logToOutputln(GPRS_CONNECTION_FAILED);
@@ -90,17 +95,44 @@ void setup() {
     } else {
         logToOutputln(INIT_TWAI_ERROR);
     }
+    if (!connectToNetwork(modem, apn, gprsUser, gprsPass)) {
+    logToOutputln(GPRS_CONNECTION_FAILED);
+    modemRestart();
+} else {
+    delay(1000);  // 🕐 Pequeña espera para que se estabilice la red
+   syncTimeFromHTTPHeader(modem);
+
+}
 
     enableGPS(modem);
     logToOutputln(SYSTEM_INITIALIZED);
     
+    xTaskCreatePinnedToCore(taskInternalClock, "ClockTask", 2048, NULL, 1, NULL, 1);
     xTaskCreate(taskGPSTraccar, "TaskGPSTraccar", STACK_SIZE, NULL, GPS_TASK_PRIORITY, NULL);
     xTaskCreate(taskCANProcessing, "CANTask", STACK_SIZE, NULL, CAN_TASK_PRIORITY, &canTaskHandle);
+    xTaskCreatePinnedToCore(taskSendCANHour, "CANHourTask", 2048, NULL, 1, NULL, 1);
+
 }
 
 void loop() {
     // No es necesario usar loop, todo se maneja en tareas
 }
+
+void taskInternalClock(void *pvParameters) {
+  for (;;) {
+    vTaskDelay(pdMS_TO_TICKS(60000));  // Espera 60 segundos
+
+    minute++;
+    if (minute >= 60) {
+      minute = 0;
+      localHour++;
+      if (localHour >= 24) {
+        localHour = 0;
+      }
+    }
+  }
+}
+
 
 
 void taskSMSChecker(void *pvParameters) {
@@ -111,7 +143,43 @@ void taskSMSChecker(void *pvParameters) {
     }
 }
 
+void taskSendCANHour(void *pvParameters) {
+  for (;;) {
+    // Aquí envías `localHour` por CAN (y si quieres, también `min`)
+    sendHourViaCAN(localHour, minute);
 
+    vTaskDelay(pdMS_TO_TICKS(200)); // Espera 200ms
+  }
+}
+
+void sendHourViaCAN(int hour, int minute) {
+  twai_message_t message = {
+    message.identifier = 0x510,
+    message.extd = 0,
+    message.rtr = 0,
+    message.data_length_code = 8
+  };
+
+  message.data[0] = 0x00;
+  message.data[1] = 0x00;
+  message.data[2] = 0x01;
+  message.data[3] = 0x00;
+  message.data[4] = 0x70;
+  message.data[5] = (uint8_t)hour;
+  message.data[6] = (uint8_t)minute;
+  message.data[7] = 0x00;
+
+  if (twai_transmit(&message, pdMS_TO_TICKS(10)) == ESP_OK) {
+    logToOutput("→ CAN hora enviada: ");
+    if (hour < 10) logToOutput("0");
+    logToOutput(String(hour));
+    logToOutput(":");
+    if (minute < 10) logToOutput("0");
+    logToOutputln(String(minute));
+  } else {
+    logToOutputln("× Error al enviar hora por CAN");
+  }
+}
 
 void taskGPSTraccar(void *pvParameters) {
     float lat, lon, speed, alt, accuracy;
