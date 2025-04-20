@@ -61,7 +61,7 @@ A continuación, se detalla la descripción de cada archivo:
 | `modem.cpp`       | Control y comunicación con el módem, incluyendo comandos AT.              |
 | `sms.cpp`         | Implementación de la lógica para la gestión de mensajes SMS.               |
 | `output.cpp`      | Gestión de la salida de datos, como logs o pantallas.                     |
-| `timeutils.h`      | Obtención y la gestión de la hora.                          |
+| `timeutils.cpp`      | Obtención y la gestión de la hora.                          |
 | `sms.h`           | Declaraciones de funciones relacionadas con SMS.                          |
 | `globals.h`       | Declaraciones de variables globales para uso compartido entre módulos.    |
 | `modem.h`         | Declaraciones de funciones para el manejo del módem.                      |
@@ -185,7 +185,7 @@ Si está conectado por USB está recibiendo carga. Se da por supuesto que nuestr
 Si no recibe carga por USB, el voltaje de la batería es calculado. Este se envía a Traccar y además un ignition=false. Sabremos por tanto el nivel de carga restante de nuestro ESP32, ubicación y batería de la moto. Se envían el tiempo definido por la variable `VEHIApagadoDelay`
 
 # ¿Cómo compilarlo?
-Descarga la carpeta SRC completa y abre CanRiderONE.ino con Arduino. Descarga la librería ´Adafruit_ST7735´ y ´Adafruit_GFX´. Realmente no son necesarias, pero en la versión que tengo uso una pequeña pantalla TFT para poder ver los logs. Puedes eliminar las referencias del código si quieres.
+Descarga la carpeta SRC completa y abre CanRiderONE.ino con Arduino. Descomprime la carpeta TinyGSM en las librerias de Arduino y añade las que falten: ArduinoHttpClient y Arduino. 
 
 Adapta las variables recogidas en ´globals.cpp´ y compila. 
 
@@ -219,6 +219,10 @@ Una vez conectado todo... Voilá!
 ![Running_CANRider_detail](https://github.com/jichef/CANRider-One/blob/main/images/photo_2_2025-01-08_23-33-56.jpg)
 
 Solo queda abrir algunos agujerillos con el taladro para poder pasar los cables perfectamente sin que queden por fuera para dejarlo un poco más estético.
+
+Hay una segunda opción, que es utilizar el conector de una ECU muerta y añadirlo a nuestro ESP:
+![Cable_ECU](https://github.com/jichef/CANRider-One/blob/main/images/photo_2025-04-20_19-40-45.jpg)
+La unica pega de conectarlo en el frontal de la moto es que necesitaremos sacar la corriente del puerto USB y habría que alterar cableado original de la moto. A mi está opción me gusta menos. 
 
 ## Velocidad del bus
 La velocidad del bus de Supersoco CPX es 250kbps, pero si deseas usar este proyecto y no sabes la velocidad del bus de tu vehículo, te dejo un [.ino](ReceptorTWAI_speed/Receptor_TWAI_multiplespeed.ino) que escucha a diferentes velocidades. Empieza en 125kbps y cada 5 segundos aumenta la velocidad hasta 1000Kbps mientras informa de lo que recibe. Después puedes usar este otro [receptor TWAI](ReceptorTWAI_speed/Receptor_TWAI.ino) con la velocidad que elijas para escuchar todo lo que se cuece por tu circuito CAN.
