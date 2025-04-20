@@ -7,9 +7,7 @@
 #include <TinyGsmClient.h>
 #include <ArduinoHttpClient.h>
 #include <BluetoothSerial.h>
-extern "C" void* lwip_hook_ip6_input(void* p) {
-  return p; // simplemente devuelve el paquete sin modificar
-}
+
 
 
 // Definiciones para TinyGSM y configuración
