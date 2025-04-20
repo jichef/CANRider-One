@@ -6,6 +6,7 @@
 - Localización del vehículo por GPS
 - Registro de los datos en servidor propio de Traccar
 - Comunicación mediante SMS
+- Visionado de la hora en pantalla
 
 Ideal para entusiastas de la tecnología y la movilidad eléctrica, **CANRider One** ofrece una experiencia optimizada para comprender y mejorar el rendimiento de tu motocicleta.
 
@@ -60,11 +61,13 @@ A continuación, se detalla la descripción de cada archivo:
 | `modem.cpp`       | Control y comunicación con el módem, incluyendo comandos AT.              |
 | `sms.cpp`         | Implementación de la lógica para la gestión de mensajes SMS.               |
 | `output.cpp`      | Gestión de la salida de datos, como logs o pantallas.                     |
+| `timeutils.h`      | Obtención y la gestión de la hora.                          |
 | `sms.h`           | Declaraciones de funciones relacionadas con SMS.                          |
 | `globals.h`       | Declaraciones de variables globales para uso compartido entre módulos.    |
 | `modem.h`         | Declaraciones de funciones para el manejo del módem.                      |
 | `output.h`        | Declaraciones para funciones de salida de datos.                          |
 | `messages.h`      | Declaraciones relacionadas con los mensajes CAN.                          |
+| `timeutils.h`      | Declaraciones relacionadas la gestión de la hora.                          |
 
 # Configuración de Variables Globales
 
@@ -191,7 +194,7 @@ Estoy seguro que se puede usar con otros módems, por lo que en ´globals.cpp´p
 Compila. 
 
 ## Conexiones
-Además, evidentemente necesitas conectar todo. Necesitas un [transciever SN65HVD230](https://www.amazon.es/gp/product/B07VG3Z9GT/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1) (ojo, no recomiendan comprarlo en Aliexpress). En este momento tienes dos opciones. Primero ¿tienes una ECU? si ya tienes una tienes que saber que es la encargada de mandar la hora al display. Si quieres mantener la hora debes dejarla conectada; en este caso tendras que cortar una resistencia a tu transceiver (da igual si es R1 o R2). En el caso que no dispongas de ECU o simplemente te importe un carajo la hora en el display NO ELIMINES NINGUNA resistencia.
+Además, evidentemente necesitas conectar todo. Necesitas un [transciever SN65HVD230](https://www.amazon.es/gp/product/B07VG3Z9GT/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1) (ojo, no recomiendan comprarlo en Aliexpress). 
 
 Se utilizan los pines del ESP32 32 para TX y 33 para RX del transciever. Están elegidos esos para que queden juntos 3.3V, GND, 32 y 33. Directos al transciever. El CANL y H del mismo deberan conectarse a la moto. 
 
