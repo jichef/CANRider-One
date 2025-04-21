@@ -52,8 +52,6 @@ void setup() {
 
     modemPowerOn();
     initializeModem(modem);
-    delay(1000);  // 🕐 Pequeña espera para que se estabilice la red
-    syncTimeFromHTTPHeader(modem);
     xTaskCreatePinnedToCore(taskSMSChecker, "SMSTask", 4096, NULL, 1, NULL, 1);
     if (!connectToNetwork(modem, apn, gprsUser, gprsPass)) {
         logToOutputln(GPRS_CONNECTION_FAILED);
@@ -94,6 +92,7 @@ void setup() {
     } else {
         logToOutputln(INIT_TWAI_ERROR);
     }
+    syncTimeFromHTTPHeader(modem);
 
 
     enableGPS(modem);
