@@ -20,15 +20,7 @@ Este firmware permite:
 - ✅ Lectura de batería del ESP32 y batería CAN del vehículo.
 - ✅ Gestión remota vía **Telegram bot**.
 - ✅ Activación y desactivación de **Bluetooth** mediante comandos.
-- ✅ Soporte para **TWAI (CAN Bus)** con recepción de tramas (por ejemplo ID `0x541`).
-
----
-
-## 📦 Dependencias
-
-- [`TinyGSM`](https://github.com/vshymanskyy/TinyGSM) versión compatible con SIM7000SSL.
-- [`ArduinoJson`](https://github.com/bblanchon/ArduinoJson) para parseo de respuestas JSON.
-- ESP32 board definitions (probado con T-SIM7000).
+- ✅ Soporte para **TWAI (CAN Bus)** con recepción de tramas.
 
 ---
 
