@@ -16,6 +16,8 @@ Ideal para entusiastas de la tecnología y la movilidad eléctrica, CANRider One
 
 > ⚠️ **Aviso**: Es un proyecto básico. No me hago responsable de posibles daños. En ningún momento el firmware final envía tramas CAN distintas a la hora (enviar otras tramas podría bloquear el BMS). He documentado lo mejor posible el proceso.
 
+Puedes unirte si quieres
+https://t.me/+KCIM_fFMSy0yMTBk
 ---
 
 # CANRider-One · Versión Telegram
