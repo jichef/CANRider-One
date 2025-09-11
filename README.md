@@ -29,7 +29,7 @@ Este firmware permite:
 - Recibir y procesar **tramas CAN** del sistema de la moto.
 - Optimización básica del consumo energético (**GPS apagado por defecto**, **GPRS** siempre activo pero optimizado).
 <p align="center">
-  <img src=bot.jpg" alt="Bot de Telegram" width="750" height="550">
+  <img src="bot.jpg" alt="CanRIDER" width=300" height="300">
 </p>
 ---
 
