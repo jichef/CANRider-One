@@ -2,7 +2,7 @@
   <img src="canrider.jpg" alt="CanRIDER" width=300" height="300">
 </p>
 
-# 🏍️ CanRIDER
+# CanRider ONE
 
 **CANRider One** es un sistema diseñado para integrar y supervisar datos de motos eléctricas mediante el protocolo **CAN**. Combina simplicidad y funcionalidad, permitiendo:
 - Monitorizar el **estado de la batería (SoC)**,
