@@ -31,55 +31,56 @@ Permite monitorizar el estado de la batería (SoC), enviar la hora al bus, regis
 
 ## ⚙️ Hardware necesario
 
-- **ESP32** (ej. DevKit, LilyGO T7000, MH-ET Live Mini, etc.)
-- **Transceptor CAN** (SN65HVD230 u otro compatible)
+- **ESP32** [LilyGO T7000G (Importante la G) ](https://es.aliexpress.com/item/4000542688096.html?spm=a2g0o.productlist.main.3.32cbJudJJudJ2w&algo_pvid=415d3a53-2736-4e1c-81be-6b7a21f6e6fb&algo_exp_id=415d3a53-2736-4e1c-81be-6b7a21f6e6fb-1&pdp_npi=4%40dis%21EUR%2141.59%2141.59%21%21%2142.24%2142.24%21%4021038e6617352498647415124efd6a%2112000032432563392%21sea%21ES%210%21ABX&curPageLogUid=8nMRXncF299e&utparam-url=scene%3Asearch%7Cquery_from%3A)
+- **Transceptor CAN** [SN65HVD230 u otro compatible](https://www.amazon.es/gp/product/B07VG3Z9GT/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1)
   - `TX_GPIO = 33`
   - `RX_GPIO = 32`
 - **Módem SIM7000G** con tarjeta SIM (APN configurable)
 - **MicroSD** (opcional, para logs en JSON)
-- **Conversor DC-DC** (60 V → 5 V) para alimentación desde la moto
+- **Conversor DC-DC** (60 V → 5 V) para alimentación desde la moto sustituyendo la ECU original
+- **Tarjeta SIM** (Digi tiene una tarifa de datos con 2GB -que sobra- pero ofrece SMS gratis entre números DIGI)
+- **Carcasa impresa** https://www.thingiverse.com/thing:5861376
 
 ---
 
 ## 📚 Librerías
 
-Instalar en Arduino IDE / PlatformIO:
+Descargar Arduino IDE e instalar en Arduino IDE:
 
 - [TinyGSM](https://github.com/vshymanskyy/TinyGSM)  
-- `TinyGsmClientSIM7000SSL` (HTTPS para SIM7000)  
+- `TinyGsmClientSIM7000SSL` (HTTPS para SIM7000, está incluída en la anterior)  
 - [UniversalTelegramBot](https://github.com/witnessmenow/Universal-Arduino-Telegram-Bot)  
 - ArduinoJson  
 - ESP32 CAN (TWAI, incluido en ESP32 core)  
 - FreeRTOS (incluido en ESP32 core)  
 - SD (incluido en ESP32 core)
 
+Todo es es sencillo: "Manage Libraries" y ahí buscar e instalarlas. 
+
+Descargar el proyecto y compilar
 ---
 
 ## 🔌 Conexiones
-
-- **CAN-H / CAN-L** → bus CPX  
+Del transceptor:
+- **CAN-H / CAN-L** del transceptor → bus CPX (conector delantero de la ECU, adjuntaré fotos) 
 - **ESP32 GPIO 33** → TX transceptor  
-- **ESP32 GPIO 32** → RX transceptor  
-- **UART SIM7000** → ESP32 (según tu placa)  
-- **Alimentación**: 5 V a ESP32 y SIM7000
-
+- **ESP32 GPIO 32** → RX transceptor
+- **Alimentación**: 5 V a TSIM7000
+- **GND Transceptor** GND del TSIM7000 
 ---
 
 ## 🛠️ Instalación
+Descagar el ZIP
 
-```bash
-git clone https://github.com/tu_usuario/CanRIDER.git
-cd CanRIDER
-```
-
-1. Abre el proyecto en Arduino IDE o PlatformIO.  
+1. Abre el proyecto en Arduino IDE  
 2. Configura el archivo `config_user.h`:
 
 ```cpp
-#define APN "orangeworld"      // Ejemplo Yoigo
+#define APN "internet.digimobile.es"      // Ejemplo DIGI
 #define BOT_TOKEN "123456:ABC..."  // Token de tu bot Telegram
 #define CHAT_ID  "123456789"       // chat_id autorizado
 ```
+NOTA: Tienes que crear un bot y conseguir el token. Es sencillo, googlea y verás.
 
 3. Compila y sube el firmware al ESP32.
 
@@ -165,5 +166,5 @@ MIT License — Libre para usar y modificar.
 
 ---
 
-✍️ **Autor:** [@tu_usuario](https://github.com/tu_usuario)  
+✍️ **Autor:** [@tjichef](https://github.com/jichef)  
 📌 Proyecto para la Supersoco CPX
