@@ -1,8 +1,18 @@
-# CANRider-One. Actualización para Telegram
+# 🏍️ CanRIDER
 
-He decidido dejar a un lado la versión de Traccar porque requiere un mayor desarrollo y aparataje que en realidad no era necesario. Quedaba muy bien pero era demasiado engorroso para quienes empiezan de cero. Simplificando el proceso con Telegram, se reduce a preguntarle a un bot por el estado de la batería del vehículo y ubicación.
+CANRider One es un sistema diseñado para integrar y supervisar datos de motos eléctricas mediante el protocolo CAN. Este proyecto combina simplicidad y funcionalidad, permitiendo:
+Permite monitorizar el estado de la batería (SoC), enviar la hora al bus, registrar datos en microSD y controlar el sistema mediante **Telegram**.
+Ideal para entusiastas de la tecnología y la movilidad eléctrica, CANRider One ofrece una experiencia optimizada para comprender y mejorar el rendimiento de tu motocicleta.
 
-📡 Proyecto basado en ESP32 con conectividad GSM (SIM7000G), Bluetooth, GPS y comunicación CAN bus para motos eléctricas como la Supersoco CPX.
+Este proyecto está adaptado para SuperSoco CPX.
+
+Es un proyecto muy básico y, por supuesto, no me hago responsable de la que puedas liar ni de si te funciona. No debería ocurrir nada, pues en nigún momento el proyecto final envía tramas CAN diferentes a la hora a la moto (podría bloquear tu BMS). Lo he documentado lo mejor que he podido.
+
+# CANRider-One. Versión para Telegram
+
+He decidido dejar a un lado la [versión de Traccar - puedes consultarla aquí-](https://github.com/jichef/CANRider-One/tree/main/CANRider-One-Traccar_Version) porque requiere un mayor desarrollo y aparataje que en realidad no era necesario. Quedaba muy bien pero era demasiado engorroso para quienes empiezan de cero con poca idea. Simplificando el proceso con Telegram, se reduce a preguntarle a un bot por el estado de la batería del vehículo y ubicación. Fin. 
+
+Solo necesitas comprar el ESP32, transceptor, carcasa, compilar y listo.
 
 Este firmware permite:
 - Enviar mensajes por **Telegram** para consultar batería, ubicación GPS
@@ -22,10 +32,6 @@ Este firmware permite:
 - ✅ Soporte para **TWAI (CAN Bus)** con recepción de tramas.
 
 ---
-# 🏍️ CanRIDER
-
-CanRIDER es un sistema basado en **ESP32 + módem SIM7000** diseñado para integrarse con la motocicleta **Supersoco CPX** mediante el bus **CAN (TWAI a 250 kbps)**.  
-Permite monitorizar el estado de la batería (SoC), enviar la hora al bus, registrar datos en microSD y controlar el sistema mediante **Telegram**.
 
 ---
 
