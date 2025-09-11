@@ -141,14 +141,14 @@ cd CanRIDER
 📡 GNSS: desactivado
 ⏰ Hora: 12:34
 ```
-```
+---
 
 ## Con `/gps` →  
 📍 [Abrir en Google Maps](https://maps.google.com/?q=37.123,-3.456)
 Cuando envías /gps por Telegram, el sistema: activa el GNSS del SIM7000, busca fix de satélites hasta un timeout (10 minutos), va informando por Telegram del progreso (cada ~25–30 s se recibe un mensaje indicando el progreso de satélites encontrados; al princpio busca sateítes y es muy exigente con la localización, si pasad un tiempo no mejora, empieza a bajar el nivel de exigencia enviando posibles ubicaciones; si tras los 10 min encuentra algo mejor, lo envía), 
 devuelve la ubicación como enlace de Google Maps (lat,lon) y, si está disponible, precisión/datos útiles. Finalmente apaga el GNSS para ahorrar energía.
 ---
-
+---
 ## 🚦 Roadmap
 
 - [x] Envío de hora por CAN  
