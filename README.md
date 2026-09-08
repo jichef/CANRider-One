@@ -4,4 +4,4 @@
 
 # CanRider ONE
 
-**[CANRider TWO Github](https://github.com/jichef/CANRider-Two/)** Es la última versión del proyecto operativa. **[CANRider TWO](https://jichef.github.io/CANRider-Two/)**
+**[CANRider TWO Github](https://github.com/jichef/CANRider-Two/)** Es la última versión del proyecto operativa. **[Guia de instalación de CANRider TWO](https://jichef.github.io/CANRider-Two/)**
